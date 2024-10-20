@@ -62,6 +62,24 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-fill' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
+
+        <MenuItem href={`/${locale}/pages/user-profile`} icon={<i className='ri-home-smile-line' />}>
+          Home
+        </MenuItem>
+
+        <MenuItem href={`/${locale}/apps/user/view`} icon={<i className='ri-user-line' />}>
+          About
+        </MenuItem>
+
+        <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='ri-tv-2-line' />}>
+          Team
+        </MenuItem>
+
+        <MenuItem href={`/${locale}/apps/calendar`} icon={<i className='ri-calendar-line' />}>
+          Calendar
+        </MenuItem>
+        
+        <MenuSection label={dictionary['navigation'].appsPages}>
         <SubMenu
           label={dictionary['navigation'].dashboards}
           icon={<i className='ri-home-smile-line' />}
@@ -90,7 +108,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             {dictionary['navigation'].helpCenter}
           </MenuItem>
         </SubMenu>
-        <MenuSection label={dictionary['navigation'].appsPages}>
           <SubMenu label={dictionary['navigation'].eCommerce} icon={<i className='ri-shopping-bag-3-line' />}>
             <MenuItem href={`/${locale}/apps/ecommerce/dashboard`}>{dictionary['navigation'].dashboard}</MenuItem>
             <SubMenu label={dictionary['navigation'].products}>

@@ -670,9 +670,9 @@ export const db = {
   },
   profileHeader: {
     fullName: 'John Doe',
-    location: 'Vatican City',
-    joiningDate: 'April 2021',
-    designation: 'UX Designer',
+    location: 'Brisbane City',
+    joiningDate: 'April 2024',
+    designation: 'Patient',
     profileImg: '/images/avatars/1.png',
     designationIcon: 'ri-palette-line',
     coverImg: '/images/pages/profile-banner.png'
