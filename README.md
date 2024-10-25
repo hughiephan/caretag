@@ -29,6 +29,25 @@ admin@materialize.com
 admin
 ```
 
+## Deployment 
+
+You’ll need to access the EC2 instance on AWS, start the Nginx reverse proxy, and configure it to point to port 3000. Then, clone the current codebase onto the instance. By default, Next.js will launch the service on port 3000.
+
+Setup Nginx Proxy 
+```
+https://blog.logrocket.com/how-to-run-node-js-server-nginx/
+```
+
+Setup NextJS
+```
+git clone https://github.com/hughiephan/caretag.git
+cd caretag
+npm install
+sudo npm install pm2 -g
+npm run build
+pm2 start npm -- start
+```
+
 ## Development
 
 Refer to the official Materialize guide from: https://demos.pixinvent.com/materialize-nextjs-admin-template/documentation
