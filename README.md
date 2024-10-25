@@ -54,10 +54,6 @@ You can experiment with the menu options first, as the project allows switching 
 
 <img width="907" alt="image" src="https://github.com/user-attachments/assets/65befd1f-eab3-4b13-8598-4a045b00841e">
 
-## Goals-page (Todo)
-
-<img width="684" alt="image" src="https://github.com/user-attachments/assets/c112e066-be6e-478a-a522-54e7affa856f">
-
 ## Documents-page (Todo)
 
 <img width="617" alt="image" src="https://github.com/user-attachments/assets/b522df61-c307-41ab-bc41-295fca4fd257">
