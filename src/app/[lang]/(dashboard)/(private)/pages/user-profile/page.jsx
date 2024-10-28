@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import UserProfile from '@views/pages/user-profile'
 
 // Data Imports
-import { getProfileData } from '@/app/server/actions'
+import { getProfileData, getEmployees} from '@/app/server/actions'
 
 const ProfileTab = dynamic(() => import('@views/pages/user-profile/profile'))
 const TeamsTab = dynamic(() => import('@views/pages/user-profile/teams'))
@@ -38,8 +38,10 @@ const tabContentList = data => ({
 } */
 const ProfilePage = async () => {
   // Vars
-  const data = await getProfileData()
+  const data = await getProfileData();
 
+  const employees = await getProfileData();
+  
   return <UserProfile data={data} tabContentList={tabContentList(data)} />
 }
 
