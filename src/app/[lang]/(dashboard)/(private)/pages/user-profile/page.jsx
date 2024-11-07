@@ -40,9 +40,14 @@ const ProfilePage = async () => {
   // Vars
   const data = await getProfileData();
 
-  const employees = await getProfileData();
+  const currentUserData = await getEmployees('nikolaiph@example.com');
+
   
-  return <UserProfile data={data} tabContentList={tabContentList(data)} />
+
+  data.profileHeader = currentUserData.header;
+  data.users.profile.about = currentUserData.profile.about;
+  
+return <UserProfile data={data} tabContentList={tabContentList(data)} />
 }
 
 export default ProfilePage

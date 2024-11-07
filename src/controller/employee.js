@@ -1,7 +1,11 @@
 import pool from "../configs/db";
 
 const getAllEmployees = (req,res) => {
-    res.send("Hello");
+    let user = pool.GET(`*`,`USERS`,`WHERE first_name = 'Nikolai'`,``);
+
+    console.log('user',user)
+
+    res.send(user);
 };
 
 export {getAllEmployees};

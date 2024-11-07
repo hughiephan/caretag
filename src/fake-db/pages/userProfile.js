@@ -1,12 +1,15 @@
+
+
 export const db = {
   users: {
     profile: {
       about: [
         { property: 'Full Name', value: 'John Doe', icon: 'ri-user-3-line' },
-        { property: 'Status', value: 'active', icon: 'ri-check-line' },
+        { property: 'State', value: 'active', icon: 'ri-check-line' },
         { property: 'Role', value: 'Developer', icon: 'ri-star-smile-line' },
         { property: 'Country', value: 'USA', icon: 'ri-flag-line' },
         { property: 'Language', value: 'English', icon: 'ri-translate-2' }
+        
       ],
       contacts: [
         { property: 'Contact', value: '(123) 456-7890', icon: 'ri-phone-line' },

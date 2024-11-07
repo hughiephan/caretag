@@ -23,14 +23,20 @@ pool.getConnection((err)=>{
 });
 
 //retreive
-const GET = (columns,table,conditions) => {
+pool.GET = (columns,table,join,conditions) => {
     return new Promise((resolve, reject)=>{
         let query =  `SELECT ${columns} FROM ${table}`;
+
+        if((join && join != '' && join != ' ' && join != undefined)){
+            query+=' '+join;
+        }
+
 
         if((conditions && conditions != '' && conditions != ' ' && conditions != undefined)){
             query+=' '+conditions;
         }
 
+        
         pool.query(query,  (error, employees)=>{
             if(error){
                 console.log(`there was an error`,error);
@@ -38,7 +44,7 @@ const GET = (columns,table,conditions) => {
                 return reject(error);
             }
             
-            console.log(`employees returned`,employees);
+            //console.log(`employees returned`,employees);
 
             return resolve(employees);
         });
@@ -46,7 +52,7 @@ const GET = (columns,table,conditions) => {
 }
 
 //insert
-const POST = (columns,table,values) => {
+pool.POST = (columns,table,values) => {
     return new Promise((resolve, reject)=>{
         let query =  `INSERT INTO ${table} (${columns}) (${values}) `;
 
@@ -57,7 +63,7 @@ const POST = (columns,table,values) => {
                 return reject(error);
             }
             
-            console.log(`employees returned`,employees);
+            //console.log(`employees returned`,employees);
 
             return resolve(employees);
         });
@@ -65,7 +71,7 @@ const POST = (columns,table,values) => {
 }
 
 //update
-const PUT = (table,values,conditions) => {
+pool.PUT = (table,values,conditions) => {
     return new Promise((resolve, reject)=>{
 
         let query =  `INSERT INTO ${table} SET `;
@@ -83,14 +89,14 @@ const PUT = (table,values,conditions) => {
                 return reject(error);
             }
             
-            console.log(`employees returned`,employees);
+            //console.log(`employees returned`,employees);
 
             return resolve(employees);
         });
     });
 }
 
-const PATCH = (table,values,conditions) => {
+pool.PATCH = (table,values,conditions) => {
     return new Promise((resolve, reject)=>{
 
         let query =  `INSERT INTO ${table} SET `;
@@ -108,7 +114,7 @@ const PATCH = (table,values,conditions) => {
                 return reject(error);
             }
             
-            console.log(`employees returned`,employees);
+            //console.log(`employees returned`,employees);
 
             return resolve(employees);
         });
@@ -116,7 +122,7 @@ const PATCH = (table,values,conditions) => {
 }
 
 //delete
-const DELETE = (table,conditions) => {
+pool.DELETE = (table,conditions) => {
     return new Promise((resolve, reject)=>{
         let query =  `DELETE FROM ${table} WHERE ${conditions}`;
 
@@ -127,11 +133,12 @@ const DELETE = (table,conditions) => {
                 return reject(error);
             }
             
-            console.log(`employees returned`,employees);
+            //console.log(`employees returned`,employees);
 
             return resolve(employees);
         });
     });
 }
 
-module.exports = pool;
+//module.exports = pool;
+export default pool;

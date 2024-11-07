@@ -1,37 +1,38 @@
 -- Table: PERMISSIONS
 CREATE TABLE PERMISSIONS (
-    permission_id INT PRIMARY KEY,
+    permission_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     field VARCHAR(255)
 );
 
 -- Table: USERS
 CREATE TABLE GENDER (
-    gender_id INT PRIMARY KEY,
+    gender_id INT AUTO_INCREMENT PRIMARY KEY,
     gender_name VARCHAR(255)
 );
 
 -- Table: USERS
 CREATE TABLE SEX (
-    sex_id INT PRIMARY KEY,
+    sex_id INT AUTO_INCREMENT PRIMARY KEY,
     sex_name VARCHAR(255)
 );
 
 -- Table: USERS
 CREATE TABLE BLOOD_TYPE (
-    blood_type_id INT PRIMARY KEY,
+    blood_type_id INT AUTO_INCREMENT PRIMARY KEY,
     blood_type_name VARCHAR(255)
 );
 
 -- Table: USERS
 CREATE TABLE USERS (
-    user_id INT PRIMARY KEY,
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    date_joined DATETIME,
     first_name VARCHAR(255),
     middle_names VARCHAR(255),
     last_name VARCHAR(255),
+    dob DATE,
     gender_id INT,
     sex_id INT,
-    address VARCHAR(255),
     blood_type_id INT,
     phone INT,
     email VARCHAR(255),
@@ -40,6 +41,39 @@ CREATE TABLE USERS (
     FOREIGN KEY (blood_type_id) REFERENCES BLOOD_TYPE(blood_type_id)
 );
 
+
+
+-- Table: USERS_PERMISSIONS
+CREATE TABLE USERS_ADDRESS (
+    user_id INT,
+    address_id INT  AUTO_INCREMENT PRIMARY KEY,
+    street_number INT,
+    street_name VARCHAR(255),
+    suburb VARCHAR(255),
+    city VARCHAR(255),
+    state_id INT,
+    country_id INT,
+    postcode INT,
+    FOREIGN KEY (user_id) REFERENCES USERS(user_id),
+    FOREIGN KEY (country_id) REFERENCES COUNTRY(country_id),
+    FOREIGN KEY (state_id) REFERENCES STATE(state_id)
+);
+
+-- Table: USERS_PERMISSIONS
+CREATE TABLE COUNTRY (
+    country_id INT AUTO_INCREMENT PRIMARY KEY,
+    country_name VARCHAR(255),
+    country_code VARCHAR(5)
+);
+
+-- Table: USERS_PERMISSIONS
+CREATE TABLE STATE (
+    state_id INT AUTO_INCREMENT PRIMARY KEY,
+    state_name VARCHAR(255),
+    state_code VARCHAR(5),
+    country_id INT,
+    FOREIGN KEY (country_id) REFERENCES COUNTRY(country_id)
+);
 
 
 -- Table: USERS_PERMISSIONS
