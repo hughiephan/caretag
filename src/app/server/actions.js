@@ -107,8 +107,8 @@ export const getEmployees = async (email) => {
 
     for(const [index,value] of userAddresses.entries()){
       const userAddress = {
-        "fullAddress":`${value['steet_number']} ${value['street_name']}, ${value['suburb']} (${value['postcode']}), ${value['city']}, ${value['state_code']} ${value['country_name']}`,
-        "streetNumber":value['steet_number'],
+        "fullAddress":`${value['street_number']} ${value['street_name']}, ${value['suburb']} (${value['postcode']}), ${value['city']}, ${value['state_code']} ${value['country_name']}`,
+        "streetNumber":value['street_number'],
         "streetName":value['street_name'],
         "suburb":value['suburb'],
         "city":value['city'],
@@ -155,7 +155,7 @@ const getAddress = async (userid) => {
   const state_join = `INNER JOIN COUNTRY ON USERS_ADDRESS.country_id = COUNTRY.country_id`;
   const country_join = `INNER JOIN STATE ON USERS_ADDRESS.state_id = STATE.state_id `;
   
-  const columns = `USERS_ADDRESS.steet_number, USERS_ADDRESS.street_name, USERS_ADDRESS.suburb, USERS_ADDRESS.city, STATE.state_name, STATE.state_code, COUNTRY.country_name, COUNTRY.country_code, USERS_ADDRESS.postcode`
+  const columns = `USERS_ADDRESS.street_number, USERS_ADDRESS.street_name, USERS_ADDRESS.suburb, USERS_ADDRESS.city, STATE.state_name, STATE.state_code, COUNTRY.country_name, COUNTRY.country_code, USERS_ADDRESS.postcode`
 
   return pool.GET(columns,'USERS_ADDRESS',`${state_join} ${country_join}`,`WHERE user_id = '${userid}'`);
 }

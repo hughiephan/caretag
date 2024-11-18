@@ -3,7 +3,8 @@ import { useParams } from 'next/navigation'
 
 // MUI Imports
 import { useTheme } from '@mui/material/styles'
-import Chip from '@mui/material/Chip'
+
+// import Chip from '@mui/material/Chip'
 
 // Component Imports
 import HorizontalNav, { Menu, SubMenu, MenuItem } from '@menu/horizontal-menu'
@@ -72,11 +73,11 @@ const HorizontalMenu = ({ dictionary }) => {
         }}
       >
 
-        <MenuItem href={`/${locale}/pages/user-profile`} icon={<i className='ri-home-smile-line' />}>
+        <MenuItem href={`/${locale}/home`} icon={<i className='ri-home-smile-line' />}>
           Home
         </MenuItem>
 
-        <MenuItem href={`/${locale}/apps/user/view`} icon={<i className='ri-user-line' />}>
+        <MenuItem href={`/${locale}/pages/user-profile`} icon={<i className='ri-user-line' />}>
           About
         </MenuItem>
 
@@ -84,11 +85,15 @@ const HorizontalMenu = ({ dictionary }) => {
           Team
         </MenuItem>
 
+        <MenuItem href={`/${locale}/apps/document`} icon={<i className='ri-tv-2-line' />}>
+          Document
+        </MenuItem>
+
         <MenuItem href={`/${locale}/apps/calendar`} icon={<i className='ri-calendar-line' />}>
           Calendar
         </MenuItem>
 
-        <SubMenu label={dictionary['navigation'].dashboards} icon={<i className='ri-home-smile-line' />}>
+        {/* <SubMenu label={dictionary['navigation'].dashboards} icon={<i className='ri-home-smile-line' />}>
           <MenuItem href={`/${locale}/dashboards/crm`} icon={<i className='ri-pie-chart-2-line' />}>
             {dictionary['navigation'].crm}
           </MenuItem>
@@ -415,7 +420,7 @@ const HorizontalMenu = ({ dictionary }) => {
             </SubMenu>
           </SubMenu>
           <MenuItem disabled>{dictionary['navigation'].disabledMenu}</MenuItem>
-        </SubMenu>
+        </SubMenu> */}
       </Menu>
       {/* <Menu
           rootStyles={menuRootStyles(theme)}
