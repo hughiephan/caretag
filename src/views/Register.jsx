@@ -59,45 +59,26 @@ const Register = ({ mode }) => {
 
   return (
     <div className='flex bs-full justify-center'>
-      <div
-        className={classnames(
-          'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden',
-          {
-            'border-ie': settings.skin === 'bordered'
-          }
-        )}
-      >
-        <div className='pli-6 max-lg:mbs-40 lg:mbe-24'>
-          <img
-            src={characterIllustration}
-            alt='character-illustration'
-            className='max-bs-[650px] max-is-full bs-auto'
-          />
+      <div className={classnames( 'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden', { 'border-ie': settings.skin === 'bordered'  }  )} >
+        {/* <div className='pli-6 max-lg:mbs-40 lg:mbe-24'>
+          <img src={characterIllustration}  alt='character-illustration' className='max-bs-[650px] max-is-full bs-auto' />
         </div>
-        <img src={authBackground} className='absolute bottom-[4%] z-[-1] is-full max-md:hidden' />
+        <img src={authBackground} className='absolute bottom-[4%] z-[-1] is-full max-md:hidden' /> */}
       </div>
       <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
-        <Link
-          href={getLocalizedUrl('/', locale)}
-          className='absolute block-start-5 sm:block-start-[38px] inline-start-6 sm:inline-start-[38px]'
-        >
+        <Link href={getLocalizedUrl('/', locale)} className='absolute block-start-5 sm:block-start-[38px] inline-start-6 sm:inline-start-[38px]' >
           <Logo />
         </Link>
 
         <div className='flex flex-col gap-5 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
           <div>
-            <Typography variant='h4'>Adventure starts here 🚀</Typography>
+            <Typography variant='h4'>Welcome to Caretag</Typography>
             <Typography className='mbs-1'>Make your app management easy and fun!</Typography>
           </div>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()} className='flex flex-col gap-5'>
             <TextField autoFocus fullWidth label='Username' />
             <TextField fullWidth label='Email' />
-            <TextField
-              fullWidth
-              label='Password'
-              type={isPasswordShown ? 'text' : 'password'}
-              InputProps={{
-                endAdornment: (
+            <TextField fullWidth label='Password' type={isPasswordShown ? 'text' : 'password'} InputProps={{ endAdornment: (
                   <InputAdornment position='end'>
                     <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
                       <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
@@ -107,17 +88,7 @@ const Register = ({ mode }) => {
               }}
             />
             <div className='flex justify-between items-center gap-3'>
-              <FormControlLabel
-                control={<Checkbox />}
-                label={
-                  <>
-                    <span>I agree to </span>
-                    <Link className='text-primary' href='/' onClick={e => e.preventDefault()}>
-                      privacy policy & terms
-                    </Link>
-                  </>
-                }
-              />
+              <FormControlLabel control={<Checkbox />} label={ <> <span>I agree to </span> <Link className='text-primary' href='/' onClick={e => e.preventDefault()}>  privacy policy & terms </Link> </> } />
             </div>
             <Button fullWidth variant='contained' type='submit'>
               Sign Up
