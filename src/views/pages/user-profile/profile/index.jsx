@@ -1,26 +1,96 @@
+'use client'
+
+// React Imports
+import { useEffect, useState } from 'react'
+
 // MUI Imports
 import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
-// Component Imports
+// Third-party Imports
+import { useSession } from 'next-auth/react'
+
 import AboutOverview from './AboutOverview'
-import ActivityTimeline from './ActivityTimeline'
-import ConnectionsTeams from './ConnectionsTeams'
-import ProjectsTable from './ProjectsTables'
+import BMIForm from './bmiForm'
+import AllergyForm from './allergyForm'
+import VitalSignForm from './vitalSignForm'
+import BMI from './dashboard/bmi'
+import AllergyTable from './dashboard/allergy' 
+import VitalSign from './dashboard/vital-sign'
 
-const ProfileTab = ({ data }) => {
+const ProfileTab = () => {
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+  const { data: session, status } = useSession()
+  
+  if (status === "authenticated") {
+    console.log(session.user.id)
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(`http://localhost:3000/api/pages/profile?userId=${session.user.id}`);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const json = await response.json();
+
+        setResult(json);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (error) {
+    return (
+      <Stack sx={{ width: '100%' }} spacing={2}>
+        <Alert severity="error">Error: {error}</Alert>
+      </Stack>);
+  }
+
+  if (!result) {
+    return (
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+      </Box>
+    );
+  }
+
   return (
     <Grid container spacing={6}>
       <Grid item lg={4} md={5} xs={12}>
-        <AboutOverview data={data} />
+        <Grid item xs={12}>
+          <AboutOverview user={result.user} />
+        </Grid>
+        <Grid item xs={12} pt={6}>
+          <BMIForm BMIResponseData={result.BMI} />
+        </Grid>
+        <Grid item xs={12} pt={6}>
+          <AllergyForm allergies={result.allergies} />
+        </Grid>
+        <Grid item xs={12} pt={6}>
+          <VitalSignForm VitalSignResponseData={result.vitalSigns} />
+        </Grid>
       </Grid>
       <Grid item lg={8} md={7} xs={12}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
-            <ActivityTimeline />
+            <BMI BMIResponseData={result.BMI} />
           </Grid>
-          <ConnectionsTeams connections={data?.connections} teamsTech={data?.teamsTech} />
           <Grid item xs={12}>
-            <ProjectsTable projectTable={data?.projectTable} />
+            <AllergyTable allergies={result.allergies} userId={result.user.id} />
+          </Grid>
+          <Grid item xs={12}>
+            <VitalSign VitalSignResponseData={result.vitalSigns} />
           </Grid>
         </Grid>
       </Grid>

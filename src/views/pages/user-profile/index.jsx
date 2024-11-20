@@ -5,13 +5,15 @@ import { useState } from 'react'
 
 // MUI Imports
 import Grid from '@mui/material/Grid'
-import Tab from '@mui/material/Tab'
+
+// import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
 
 // Component Imports
 import UserProfileHeader from './UserProfileHeader'
-import CustomTabList from '@core/components/mui/TabList'
+
+// import CustomTabList from '@core/components/mui/TabList'
 
 const UserProfile = ({ tabContentList, data }) => {
   // States
@@ -29,7 +31,7 @@ const UserProfile = ({ tabContentList, data }) => {
       {activeTab === undefined ? null : (
         <Grid item xs={12} className='flex flex-col gap-6'>
           <TabContext value={activeTab}>
-            <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
+            {/* <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
               <Tab
                 label={
                   <div className='flex items-center gap-2'>
@@ -66,7 +68,7 @@ const UserProfile = ({ tabContentList, data }) => {
                 }
                 value='connections'
               />
-            </CustomTabList>
+            </CustomTabList> */}
 
             <TabPanel value={activeTab} className='p-0'>
               {tabContentList[activeTab]}

@@ -108,6 +108,7 @@ export const authOptions = {
          * in token which then will be available in the `session()` callback
          */
         token.name = user.name
+        token.id = user.user_id
       }
 
       return token
@@ -116,6 +117,7 @@ export const authOptions = {
       if (session.user) {
         // ** Add custom params to user in session which are added in `jwt()` callback via `token` parameter
         session.user.name = token.name
+        session.user.id = token.id
       }
 
       return session

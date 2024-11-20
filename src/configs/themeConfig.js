@@ -17,9 +17,9 @@
  */
 const themeConfig = {
   templateName: 'Caretag',
-  homePageUrl: '/dashboards/home',
+  homePageUrl: '/home',
   settingsCookieName: 'materialize-mui-next-demo-1',
-  mode: 'system', // 'system', 'light', 'dark'
+  mode: 'light', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false
   layout: 'horizontal', // 'vertical', 'collapsed', 'horizontal'
@@ -39,7 +39,9 @@ const themeConfig = {
     detached: true //! true, false (This will not work in the Horizontal Layout)
   },
   disableRipple: false, // true, false
-  toastPosition: 'top-right' // 'top-right', 'top-center', 'top-left', 'bottom-right', 'bottom-center', 'bottom-left'
+  toastPosition: 'top-right', // 'top-right', 'top-center', 'top-left', 'bottom-right', 'bottom-center', 'bottom-left'
+  openAI_apiKey: '', // Replace with your OpenAI API key
+  openAI_endpoint: 'https://api.openai.com/v1/chat/completions'
 }
 
 export default themeConfig

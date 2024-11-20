@@ -6,16 +6,8 @@ import { useEffect, useState } from 'react'
 // MUI Imports
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: 60,
-  lineHeight: '60px',
-}));
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 const HomePageWrapper = () => {
@@ -48,7 +40,11 @@ const HomePageWrapper = () => {
   }
 
   if (!result) {
-    return <div>Loading...</div>;
+    return (
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+      </Box>
+    );
   }
   
 
@@ -65,14 +61,12 @@ const HomePageWrapper = () => {
     </Grid>
     <Grid container spacing={3}>
       <Grid item xs={4}></Grid>
-      <Grid item xs={4}>
-        <Item elevation={12}>
-          <Typography sx={{ pt:5 }} align='center' className='font-medium' color='text.primary'>
-            {result.message}
-          </Typography>
-        </Item>
+      <Grid item xs={8}>
+        <Typography sx={{ pt:5 }} className='font-medium' color='text.primary'>
+          <div dangerouslySetInnerHTML={{ __html: result.message }} />
+        </Typography>
       </Grid>
-      <Grid item xs={4}></Grid>
+      <Grid item></Grid>
     </Grid>
     </>
   )

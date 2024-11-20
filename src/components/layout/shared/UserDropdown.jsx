@@ -71,7 +71,7 @@ const UserDropdown = () => {
   const handleUserLogout = async () => {
     try {
       // Sign out from the app
-      await signOut({ callbackUrl: process.env.NEXT_PUBLIC_APP_URL })
+      await signOut({ callbackUrl: process.env.NEXT_PUBLIC_APP_URL, redirect: true })
     } catch (error) {
       console.error(error)
 
@@ -136,14 +136,14 @@ const UserDropdown = () => {
                     <i className='ri-settings-4-line' />
                     <Typography color='text.primary'>Settings</Typography>
                   </MenuItem>
-                  <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/pricing')}>
+                  {/* <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/pricing')}>
                     <i className='ri-money-dollar-circle-line' />
                     <Typography color='text.primary'>Pricing</Typography>
                   </MenuItem>
                   <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/faq')}>
                     <i className='ri-question-line' />
                     <Typography color='text.primary'>FAQ</Typography>
-                  </MenuItem>
+                  </MenuItem> */}
                   <div className='flex items-center plb-1.5 pli-4'>
                     <Button
                       fullWidth
@@ -152,6 +152,7 @@ const UserDropdown = () => {
                       size='small'
                       endIcon={<i className='ri-logout-box-r-line' />}
                       onClick={handleUserLogout}
+                      href='/:lang(en|fr|ar)/login'
                     >
                       Logout
                     </Button>

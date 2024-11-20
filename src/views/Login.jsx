@@ -73,7 +73,7 @@ const Login = ({ mode }) => {
   } = useForm({
     resolver: valibotResolver(schema),
     defaultValues: {
-      email: 'admin@materialize.com',
+      email: 'admin@materialize.com', // try real user email from DB
       password: 'admin'
     }
   })
