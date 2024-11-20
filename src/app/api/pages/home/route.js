@@ -98,7 +98,7 @@ export async function GET() {
     ]
   };
 
-  const result = await sendPromptToChatGPT(`summary and give helpful feedback in HTML format about the health information below ${fakePromptData}`);
+  const result = await sendPromptToChatGPT(`summary and give helpful feedback in HTML format about the health information below ${JSON.stringify(fakePromptData)}`);
 
       console.log(result)
       
