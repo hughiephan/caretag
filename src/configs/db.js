@@ -1,16 +1,21 @@
-import { NextResponse } from "next/server";
+import { createRequire } from "module";
 
-const {createPool} = require('mysql');
+const require = createRequire(import.meta.url);
+const {createPool} = require('mysql2'); 
 
+let pool;
 
-
-const pool = createPool({
+if (!global.mysqlPool) {
+  global.mysqlPool = createPool({
     host: '127.0.0.1',
     user:'root',
     password:'',
-    port: 3306,
     database: 'caretag',
+    port: 3306,
 });
+}
+
+pool = global.mysqlPool;
 
 pool.getConnection((err)=>{
     if(err){
@@ -140,5 +145,29 @@ pool.DELETE = (table,conditions) => {
     });
 }
 
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Shutting down...');
+
+    if (pool) {
+      await pool.end();
+      console.log('Connection pool closed');
+    }
+
+    process.exit(0);
+  });
+
+  // Graceful shutdown
+process.on('SIGTERM', async () => {
+    console.log('Shutting down...');
+
+    if (pool) {
+      await pool.end();
+      console.log('Connection pool closed');
+    }
+
+    process.exit(0);
+  });
+  
 //module.exports = pool;
 export default pool;

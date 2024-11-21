@@ -1,51 +1,10 @@
 // Next Imports
 import { NextResponse } from 'next/server'
 
-import {getUserDataById, getAddressByUserId, getBMIByUserId, getAllergyByUserId, getVitalSignsByUserId} from '@/app/server/action'
+import sendPromptToChatGPT from './openapi'
 
-export async function GET(request) {
-  const searchParams = request.nextUrl.searchParams
-  
-  console.log('searchParams'+searchParams)
-
-  const userId = searchParams.get('userId')
-  
-  if (userId!=undefined && userId != 'undefined') {
-    let user = await getUserDataById(userId)
-    let address = await getAddressByUserId(userId)
-    let bmi = await getBMIByUserId(userId)
-    let allergy = await getAllergyByUserId(userId)
-    let vitalSigns = await getVitalSignsByUserId(userId)
-    
-    // debug
-    // console.log(user)
-    // console.log(address)
-    // console.log(bmi)
-    // console.log(allergy)
-    // console.log(vitalSigns)
-
-    const aboutDataModel = {
-      user: {
-        user_id: userId,
-        date_joined: user.date_joined,
-        first_name: user.first_name,
-        middle_names: user.middle_names,
-        last_name: user.last_name,
-        dob: user.dob,
-        gender_name: user.gender_name,
-        sex_name: user.sex_name,
-        blood_type_name: user.blood_type_name,
-        phone: user.phone,
-        email: user.email
-      }
-    }
-    
-    console.log(aboutDataModel)
-  }
-
-  
-
-  const userFakeMidHistoryData = {
+export async function GET() {
+  const fakePromptData = {
     user: {
       id: '1',
       firstName:'Nikolai',
@@ -84,6 +43,7 @@ export async function GET(request) {
         id: '1',
         name: "XXX",
         category: "--",
+        commonSymptoms: "none",
         description: "desc",
         commonSymptoms: "penut",
         serverity: 3,
@@ -94,6 +54,7 @@ export async function GET(request) {
         id: '2',
         name: "XXY",
         category: "--",
+        commonSymptoms: "none",
         description: "desc",
         commonSymptoms: "penut",
         serverity: 3,
@@ -135,7 +96,14 @@ export async function GET(request) {
         glucoseLevels: 13.1
       }
     ]
-  }
+  };
+
+  const result = await sendPromptToChatGPT(`summary and give helpful feedback in HTML format about the health information below ${JSON.stringify(fakePromptData)}`);
+
+      console.log(result)
+      
+      const response = {message:result};
+    
+  return NextResponse.json(response)
+} 
   
-  return NextResponse.json(userFakeMidHistoryData)
-}

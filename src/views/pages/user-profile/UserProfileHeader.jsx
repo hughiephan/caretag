@@ -13,7 +13,7 @@ const UserProfileHeader = ({ data }) => {
         <div className='flex rounded-bs-xl mbs-[-30px] mli-[-5px] border-[5px] border-be-0 border-backgroundPaper bg-backgroundPaper'>
           <img height={120} width={120} src={data?.profileImg} className='rounded' alt='Profile Background' />
         </div>
-        <div className='flex is-full flex-wrap justify-start flex-col items-center sm:flex-row sm:justify-between sm:items-end gap-5'>
+        {/* <div className='flex is-full flex-wrap justify-start flex-col items-center sm:flex-row sm:justify-between sm:items-end gap-5'>
           <div className='flex flex-col items-center sm:items-start gap-2'>
             <Typography variant='h4'>{data?.fullName}</Typography>
             <div className='flex flex-wrap gap-6 gap-y-3 justify-center sm:justify-normal min-bs-[38px]'>
@@ -35,7 +35,7 @@ const UserProfileHeader = ({ data }) => {
             <i className='ri-user-follow-line text-base'></i>
             <span>Connected</span>
           </Button>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   )

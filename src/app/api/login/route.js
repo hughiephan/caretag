@@ -2,12 +2,19 @@
 import { NextResponse } from 'next/server'
 
 // Mock data for demo purpose
-import { users } from './users'
+// import { users } from './users'
+
+import {getUserDataByEmail} from '@/app/server/action'
 
 export async function POST(req) {
   // Vars
   const { email, password } = await req.json()
-  const user = users.find(u => u.email === email && u.password === password)
+
+  const users = await getUserDataByEmail(email)
+  
+  // const user = users.find(u => u.email === email && u.password === password)
+  // this will switch back when LOGIN Table has data
+  const user = users.find(u => u.email === email)
   let response = null
 
   if (user) {

@@ -16,7 +16,8 @@ import { dirname, join } from 'node:path'
 // Installation: npm install --save-dev @iconify/tools @iconify/utils @iconify/json @iconify/iconify
 import { cleanupSVG, importDirectory, isEmptyColor, parseColors, runSVGO } from '@iconify/tools'
 import { getIcons, getIconsCSS, stringToIcon } from '@iconify/utils'
-
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
 const sources = {
   json: [
     // Iconify JSON file (@iconify/json is a package name, /json/ is directory where files are, then filename)
@@ -57,6 +58,10 @@ const sources = {
 }
 
 // File to save bundle to
+import path from 'path'
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url) // get the resolved path to the file
+const __dirname = path.dirname(__filename) // get the name of the directory
 const target = join(__dirname, 'generated-icons.css')
 
 ;(async function () {
