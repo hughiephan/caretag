@@ -31,7 +31,7 @@ const ProfileTab = () => {
 
   const getAboutData = async (id) => {
     try {
-      const response = await fetch(`${process.env.API_URL}/pages/profile?userId=${id}`);
+      const response = await fetch(`/api/pages/profile?userId=${id}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
