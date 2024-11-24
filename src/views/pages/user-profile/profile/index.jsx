@@ -22,33 +22,33 @@ import AllergyTable from './dashboard/allergy'
 import VitalSign from './dashboard/vital-sign'
 
 const ProfileTab = () => {
+  const [doFetch, setDoFetch] = useState(true);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+
+  // https://next-auth.js.org/getting-started/client#usesession
   const { data: session, status } = useSession()
-  
-  if (status === "authenticated") {
-    console.log(session.user.id)
+
+  const getAboutData = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/pages/profile?userId=${id}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const json = await response.json();
+
+      setResult(json);
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch(`http://localhost:3000/api/pages/profile?userId=${session.user.id}`);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const json = await response.json();
-
-        setResult(json);
-      } catch (err) {
-        setError(err.message);
-      }
-    }
-
-    fetchData();
-  }, []);
+  if (status === "authenticated" && doFetch) {
+    getAboutData(session.user.id);
+    setDoFetch(false);
+  }
 
   if (error) {
     return (

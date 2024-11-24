@@ -15,17 +15,20 @@ if (!global.mysqlPool) {
   });
 }
 
+    global.mysqlPool.getConnection((err)=>{
+        if(err){
+            console.log(`Error connecting to db....`,err);
+        }
+        else{
+            console.log(`Connection Successful`,);
+
+        }
+    });
+}
+
 pool = global.mysqlPool;
 
-pool.getConnection((err)=>{
-    if(err){
-        console.log(`Error connecting to db....`,err);
-    }
-    else{
-        console.log(`Connection Successful`,);
 
-    }
-});
 
 //retreive
 pool.GET = (columns,table,join,conditions) => {
