@@ -6,15 +6,13 @@ const {createPool} = require('mysql2');
 let pool;
 
 if (!global.mysqlPool) {
-  global.mysqlPool = createPool({
-    host: process.env.DB_HOST || '127.0.0.1', 
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'caretag',
-    port: parseInt(process.env.DB_PORT, 10) || 3306,
-  });
-}
-
+    global.mysqlPool = createPool({
+        host: process.env.DB_HOST || '127.0.0.1', 
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'caretag',
+        port: parseInt(process.env.DB_PORT, 10) || 3306,
+    });
     global.mysqlPool.getConnection((err)=>{
         if(err){
             console.log(`Error connecting to db....`,err);
