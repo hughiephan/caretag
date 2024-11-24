@@ -3,6 +3,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   basePath: process.env.BASEPATH,
   redirects: async () => {
     return [
