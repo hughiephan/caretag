@@ -18,7 +18,7 @@ const HomePageWrapper = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(`http://localhost:3000/api/pages/home`);
+        const response = await fetch(`/api/pages/home`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
