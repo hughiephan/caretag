@@ -48,18 +48,13 @@ const FileUploaderRestrictions = () => {
         reader.onload = () => {
           const binaryStr = reader.result
           console.log(binaryStr)
-          let binaryString = '';
-          if (binaryStr) {
-            // Convert each byte to binary and pad it to 8 bits 
-            binaryString = new Uint8Array(binaryStr).forEach(byte => binaryString += byte.toString(2).padStart(8, '0'));;
-          }
 
           // Create an object with file details and ArrayBuffer
           const fileObject = {
             name: file.name,
             size: file.size,
             type: file.type,
-            data: btoa(String.fromCharCode(binaryString))
+            data: Buffer.from(binaryStr).toString('base64')
           };
 
           // Update the state with the new file object
