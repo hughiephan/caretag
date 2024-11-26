@@ -1,9 +1,9 @@
-import nc from "next-connect";
+// import nc from "next-connect";
 
-import {getAllEmployees} from "../../../../controller/employee"
+// import {getAllEmployees} from "../../../../controller/employee"
 
-const handler = nc();
+// const handler = nc();
 
-handler.get(getAllEmployees);
+// handler.get(getAllEmployees);
 
-export default handler
+// export default handler
