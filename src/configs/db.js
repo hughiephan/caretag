@@ -60,7 +60,7 @@ pool.GET = (columns,table,join,conditions) => {
 //insert
 pool.POST = (columns,table,values) => {
     return new Promise((resolve, reject)=>{
-        let query =  `INSERT INTO ${table} (${columns}) (${values}) `;
+        let query =  `INSERT INTO ${table} (${columns}) VALUES (${values}) `;
 
         pool.query(query,  (error, employees)=>{
             if(error){
