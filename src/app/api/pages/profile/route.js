@@ -1,7 +1,7 @@
 // Next Imports
 import { NextResponse } from 'next/server'
 
-import {getUserDataById, updateUserDataByid, getBMIByUserId, getAllergyByUserId, getVitalSignsByUserId, getGenderByName, getSexByName, getBloodTypeByName, getAdministeredByUserId, getperscriptionByUserId} from '@/app/server/action'
+import {getUserDataById, updateUserDataByid, getBMIByUserId, getAllergyByUserId, getVitalSignsByUserId, getGenderByName, getSexByName, getBloodTypeByName, getAdministeredByUserId, getPrescriptionByUserId} from '@/app/server/action'
 
 export async function GET(request) {
   console.log(request);
@@ -18,7 +18,7 @@ export async function GET(request) {
     let bmi = await getBMIByUserId(userId)
     let allergies = await getAllergyByUserId(userId)
     let vitalSigns = await getVitalSignsByUserId(userId)
-    let prescriptions = await getperscriptionByUserId(userId)
+    let prescriptions = await getPrescriptionByUserId(userId)
     let administered = await getAdministeredByUserId(userId)
     
     // debug

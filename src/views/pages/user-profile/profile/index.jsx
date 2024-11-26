@@ -20,7 +20,7 @@ import VitalSignForm from './vitalSignForm'
 import BMI from './dashboard/bmi'
 import AllergyTable from './dashboard/allergy' 
 import VitalSign from './dashboard/vital-sign'
-import PerscriptionTable from './dashboard/perscription'
+import PrescriptionTable from './dashboard/prescription'
 import AdministeredTable from './dashboard/administered';
 
 const ProfileTab = () => {
@@ -107,7 +107,7 @@ const ProfileTab = () => {
             <VitalSign VitalSignResponseData={result.vitalSigns} />
           </Grid>
           <Grid item xs={12}>
-            <PerscriptionTable prescriptions={result.prescriptions} />
+            <PrescriptionTable prescriptions={result.prescriptions} />
           </Grid>
           <Grid item xs={12}>
             <AdministeredTable administered={result.administered}/>

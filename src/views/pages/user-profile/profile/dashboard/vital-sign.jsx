@@ -325,7 +325,6 @@ const VitalSign = ({ VitalSignResponseData }) => {
           />
           <TextField
             fullWidth
-            disabled
             label="Temperature"
             id="filled-hidden-label-small"
             defaultValue={attributes.temperature}
@@ -335,7 +334,6 @@ const VitalSign = ({ VitalSignResponseData }) => {
           />
           <TextField
             fullWidth
-            disabled
             label="Heart rate"
             id="filled-hidden-label-small"
             defaultValue={attributes.heart_rate}

@@ -8,7 +8,7 @@ const initialState = {
   events: events,
   filteredEvents: events,
   selectedEvent: null,
-  selectedCalendars: ['Personal', 'Business', 'Family', 'Holiday', 'ETC']
+  selectedCalendars: ['Personal', 'Private', 'Appointment']
 }
 
 const filterEventsUsingCheckbox = (events, selectedCalendars) => {

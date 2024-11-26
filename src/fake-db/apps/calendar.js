@@ -12,34 +12,34 @@ export const events = [
   {
     id: '1',
     url: '',
-    title: 'Design Review',
+    title: 'Counselling',
     start: date,
     end: nextDay,
     allDay: false,
     extendedProps: {
-      calendar: 'Business'
+      calendar: 'Appointment'
     }
   },
   {
     id: '2',
     url: '',
-    title: 'Meeting With Client',
+    title: 'Specialist appointments',
     start: new Date(date.getFullYear(), date.getMonth() + 1, -11),
     end: new Date(date.getFullYear(), date.getMonth() + 1, -10),
     allDay: true,
     extendedProps: {
-      calendar: 'Business'
+      calendar: 'Appointment'
     }
   },
   {
     id: '3',
     url: '',
-    title: 'Family Trip',
+    title: 'Imaging/Radiography',
     allDay: true,
     start: new Date(date.getFullYear(), date.getMonth() + 1, -9),
     end: new Date(date.getFullYear(), date.getMonth() + 1, -7),
     extendedProps: {
-      calendar: 'Holiday'
+      calendar: 'Private'
     }
   },
   {
@@ -50,24 +50,24 @@ export const events = [
     end: new Date(date.getFullYear(), date.getMonth() + 1, -10),
     allDay: true,
     extendedProps: {
-      calendar: 'Personal'
+      calendar: 'Appointment'
     }
   },
   {
     id: '5',
     url: '',
-    title: 'Dart Game?',
+    title: 'GP appointment,',
     start: new Date(date.getFullYear(), date.getMonth() + 1, -13),
     end: new Date(date.getFullYear(), date.getMonth() + 1, -12),
     allDay: true,
     extendedProps: {
-      calendar: 'ETC'
+      calendar: 'Appointment'
     }
   },
   {
     id: '6',
     url: '',
-    title: 'Meditation',
+    title: 'Dietitian',
     start: new Date(date.getFullYear(), date.getMonth() + 1, -13),
     end: new Date(date.getFullYear(), date.getMonth() + 1, -12),
     allDay: true,
@@ -78,45 +78,45 @@ export const events = [
   {
     id: '7',
     url: '',
-    title: 'Dinner',
+    title: 'Pathology',
     start: new Date(date.getFullYear(), date.getMonth() + 1, -13),
     end: new Date(date.getFullYear(), date.getMonth() + 1, -12),
     allDay: true,
     extendedProps: {
-      calendar: 'Family'
+      calendar: 'Private'
     }
   },
   {
     id: '8',
     url: '',
-    title: 'Product Review',
+    title: 'Surgery',
     start: new Date(date.getFullYear(), date.getMonth() + 1, -13),
     end: new Date(date.getFullYear(), date.getMonth() + 1, -12),
     allDay: true,
     extendedProps: {
-      calendar: 'Business'
+      calendar: 'Private'
     }
   },
   {
     id: '9',
     url: '',
-    title: 'Monthly Meeting',
+    title: 'Rehabilitation',
     start: nextMonth,
     end: nextMonth,
     allDay: true,
     extendedProps: {
-      calendar: 'Business'
+      calendar: 'Personal'
     }
   },
   {
     id: '10',
     url: '',
-    title: 'Monthly Checkup',
+    title: 'Hospital admission',
     start: prevMonth,
     end: prevMonth,
     allDay: true,
     extendedProps: {
-      calendar: 'Personal'
+      calendar: 'Private'
     }
   }
 ]

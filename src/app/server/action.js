@@ -326,6 +326,36 @@ export const getAdministeredByUserId = async (userId) => {
   return pool.GET(columns,table,`${medication_join} ${effectiveness_join} ${frequency_join}`,conditions);
 }
 
+export const modifyAdministeredById = async (data) => {
+  const table = `ADMINISTERED`;
+  const values = data;
+  const conditions = `WHERE administered_id = '${data.administered_id}'`;
+  
+  return pool.PUT(table,values,conditions);
+}
+
+export const deleteAdministeredById = async (id) => {
+  const table = `ADMINISTERED`;
+  const conditions = `administered_id = '${id}'`;
+  return pool.DELETE(table,conditions);
+}
+
+export const addAdministeredById = async (data) => {
+  const table = `ADMINISTERED`;
+  let columns = ``;
+  let values = ``;
+
+  for(const key of Object.keys(data)){
+    columns += `${key}, `
+    values += `'${data[key]}', `
+  }
+  columns = columns.slice(0, -2);
+  values = values.slice(0, -2);
+  console.log(columns)
+  console.log(values)
+  return pool.POST(columns,table,values);
+} 
+
 // Gender
 export const getGenderByName = async (name) => {
   const columns = `*`;
@@ -361,8 +391,8 @@ export const getSeverities = async () => {
 }
 
 
-// Perscription
-export const getperscriptionByUserId = async (id) => {
+// Prescription
+export const getPrescriptionByUserId = async (id) => {
   const columns = `prescription_id, PRESCRIPTION.user_id, DOCTOR.license_number, DOCTOR.specialization, USERS.first_name AS doctor_first_name, USERS.middle_names AS doctor_middle_names, USERS.last_name AS doctor_last_name, USERS.phone AS doctor_phone, USERS.email AS doctor_email, MEDICATION.name AS medication_name, MEDICATION.manufacturer, MEDICATION_TYPE.name AS medication_type_name, MEDICATION.strength, UNIT_OF_MEASURE.name AS unit_of_measure_name, MEDICATION.description, MEDICATION.side_effects, date, dosage, FREQUENCY.name AS frequency_name, refills, notes`;
   const table = `PRESCRIPTION`;
   const user_join = `INNER JOIN USERS ON USERS.user_id = PRESCRIPTION.doctor_id`;
@@ -374,4 +404,26 @@ export const getperscriptionByUserId = async (id) => {
   const conditions = `WHERE PRESCRIPTION.user_id = '${id}'`;
 
   return pool.GET(columns,table,`${user_join} ${doctor_join} ${medication_join} ${unit_of_measure_join} ${medication_type_join} ${frequency_join}`,conditions);
+}
+
+export const addPrescription = async (data) => {
+  const table = `PRESCRIPTION`;
+  let columns = ``;
+  let values = ``;
+
+  for(const key of Object.keys(data)){
+    columns += `${key}, `
+    values += `'${data[key]}', `
+  }
+  columns = columns.slice(0, -2);
+  values = values.slice(0, -2);
+  console.log(columns)
+  console.log(values)
+  return pool.POST(columns,table,values);
+} 
+
+export const deletePrescriptionById = async (id) => {
+  const table = `PRESCRIPTION`;
+  const conditions = `prescription_id = '${id}'`;
+  return pool.DELETE(table,conditions);
 }

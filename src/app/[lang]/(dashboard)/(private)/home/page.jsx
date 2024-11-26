@@ -8,7 +8,16 @@ const HomePage = () => {
   // Vars
   const mode = getServerMode()
 
-  return <HomePageWrapper mode={mode} />
+  return (
+  <>
+    <div style={{ 
+      backgroundImage: `url(${'/images/pages/backgroundV2.png'})`,
+      backgroundRepeat: 'no-repeat',
+      width:'100%' ,
+    }}>
+      <HomePageWrapper mode={mode} />
+    </div>
+  </>)
 }
 
 export default HomePage

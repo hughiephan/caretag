@@ -242,10 +242,8 @@ const AddEventSidebar = props => {
                 onChange={e => setValues({ ...values, calendar: e.target.value })}
               >
                 <MenuItem value='Personal'>Personal</MenuItem>
-                <MenuItem value='Business'>Business</MenuItem>
-                <MenuItem value='Family'>Family</MenuItem>
-                <MenuItem value='Holiday'>Holiday</MenuItem>
-                <MenuItem value='ETC'>ETC</MenuItem>
+                <MenuItem value='Private'>Private</MenuItem>
+                <MenuItem value='Appointment'>Appointment</MenuItem>
               </Select>
             </FormControl>
             <div className='mbe-5'>

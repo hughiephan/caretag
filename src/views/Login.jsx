@@ -171,10 +171,10 @@ const Login = ({ mode }) => {
               </Typography>
             </div>
           </form>
-          <Divider className='gap-3'>or</Divider>
+          {/* <Divider className='gap-3'>or</Divider>
           <Button color='secondary' className='self-center text-textPrimary' startIcon={<img src='/images/logos/google.png' alt='Google' width={22} />} sx={{ '& .MuiButton-startIcon': { marginInlineEnd: 3 } }}  onClick={() => signIn('google')} >
             Sign in with Google
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

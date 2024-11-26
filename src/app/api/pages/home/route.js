@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 import sendPromptToChatGPT from './openapi'
 
-import {getUserDataById, getBMIByUserId, getAllergyById, getVitalSignsByUserId, getperscriptionByUserId, getAdministeredByUserId} from '@/app/server/action'
+import {getUserDataById, getBMIByUserId, getAllergyById, getVitalSignsByUserId, getPrescriptionByUserId, getAdministeredByUserId} from '@/app/server/action'
 
 export async function GET(request) {
   console.log(request);
@@ -16,7 +16,7 @@ export async function GET(request) {
     BMI: await getBMIByUserId(id),
     Allergies: await getAllergyById(id),
     vitalSigns: await getVitalSignsByUserId(id),
-    prescription: await getperscriptionByUserId(id),
+    prescription: await getPrescriptionByUserId(id),
     administered: await getAdministeredByUserId(id)
   }
 

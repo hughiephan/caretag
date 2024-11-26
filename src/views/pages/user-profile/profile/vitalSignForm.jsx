@@ -113,8 +113,8 @@ const VitalSignForm = ({ VitalSignResponseData }) => {
                 defaultValue={formattedDate(new Date(attributes.date_taken))}
                 variant="filled"
                 />
-                <Button onClick={handleAdd}>Save</Button>
-                <Button onClick={()=>{}}>Cancel</Button>
+                <Button onClick={handleAdd}>Add</Button>
+                {/* <Button onClick={()=>{}}>Cancel</Button> */}
             </Box>
             </CardContent>
         </Card>

@@ -153,7 +153,7 @@ const AllergyForm = ({ allergies }) => {
                 variant="filled"
                 />
                 <Button onClick={handleAdd}>Add</Button>
-                <Button onClick={()=>{}}>Cancel</Button>
+                {/* <Button onClick={()=>{}}>Cancel</Button> */}
             </Box>
             </CardContent>
         </Card>
