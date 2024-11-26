@@ -80,11 +80,13 @@ pool.POST = (columns,table,values) => {
 pool.PUT = (table,values,conditions) => {
     return new Promise((resolve, reject)=>{
 
-        let query =  `INSERT INTO ${table} SET `;
+        let query =  `UPDATE ${table} SET `;
         
-        for(const key of values){
-            query += `${key} = ${values[key]}, `
+        for(const key of Object.keys(values)){
+            query += `${key} = '${values[key]}', `
         }
+
+        query = query.slice(0, -2) + ' ';
 
         query += conditions;
 
