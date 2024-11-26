@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+
 /*
  * If you change the following items in the config object, you will not see any effect in the local development server
  * as these are stored in the cookie (cookie has the highest priority over the themeConfig):
@@ -15,6 +17,8 @@
  *
  * Another way is to clear the cookie from the browser's Application/Storage tab and then reload the page.
  */
+dotenv.config();
+
 const themeConfig = {
   templateName: 'Caretag',
   homePageUrl: '/home',
@@ -40,7 +44,7 @@ const themeConfig = {
   },
   disableRipple: false, // true, false
   toastPosition: 'top-right', // 'top-right', 'top-center', 'top-left', 'bottom-right', 'bottom-center', 'bottom-left'
-  openAI_apiKey: '', // Replace with your OpenAI API key
+  openAI_apiKey: process.env.OPENAI_API_KEY, // Get from .env file
   openAI_endpoint: 'https://api.openai.com/v1/chat/completions'
 }
 
