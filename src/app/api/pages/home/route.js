@@ -3,102 +3,57 @@ import { NextResponse } from 'next/server'
 
 import sendPromptToChatGPT from './openapi'
 
-export async function GET() {
-  const fakePromptData = {
-    user: {
-      id: '1',
-      firstName:'Nikolai',
-      middleNames: 'Pio',
-      lastName: 'Hákon',
-      address: '74 Victoria Street, West End (4101)',
-      city:'Brisbane',
-      country:'Australia',
-      dob:'3/11/2000',
-      sex:'Male',
-      gender:'Male',
-      bloodType: 'O+'
-    },
-    BMI: [
-      {
-        date: '1/1/2022',
-        weight: 80.1,
-        height: 180.1,
-        bmi:  24.1
-      },
-      {
-        date: '1/1/2023',
-        weight: 76.1,
-        height: 190.1,
-        bmi:  23.1
-      },
-      {
-        date: '1/1/2024',
-        weight: 86.1,
-        height: 190.2,
-        bmi:  22.1
-      }
-    ],
-    allergies: [
-      {
-        id: '1',
-        name: "XXX",
-        category: "--",
-        commonSymptoms: "none",
-        description: "desc",
-        commonSymptoms: "penut",
-        serverity: 3,
-        dateDiagnosed: "2024/11/23",
-        notes: "none"
-      },
-      {
-        id: '2',
-        name: "XXY",
-        category: "--",
-        commonSymptoms: "none",
-        description: "desc",
-        commonSymptoms: "penut",
-        serverity: 3,
-        dateDiagnosed: "2024/11/24",
-        notes: "none"
-      }
-    ],
-    vitalSigns: [
-      {
-        dateTake: "1/1/2000",
-        takenBy: 1,
-        temperature: 34.1,
-        heartRate: 111.1,
-        bloodPressure: 230.1,
-        glucoseLevels: 11.1
-      },
-      {
-        dateTake: "1/2/2001",
-        takenBy: 1,
-        temperature: 32.1,
-        heartRate: 131.1,
-        bloodPressure: 220.1,
-        glucoseLevels: 13.1
-      },
-      {
-        dateTake: "1/2/2002",
-        takenBy: 1,
-        temperature: 32.1,
-        heartRate: 131.1,
-        bloodPressure: 220.1,
-        glucoseLevels: 13.1
-      },
-      {
-        dateTake: "1/2/2003",
-        takenBy: 1,
-        temperature: 32.1,
-        heartRate: 131.1,
-        bloodPressure: 220.1,
-        glucoseLevels: 13.1
-      }
-    ]
-  };
+import {getUserDataById, getBMIByUserId, getAllergyById, getVitalSignsByUserId, getperscriptionByUserId, getAdministeredByUserId} from '@/app/server/action'
 
-  const result = await sendPromptToChatGPT(`summary and give helpful feedback in HTML format about the health information below ${JSON.stringify(fakePromptData)}`);
+export async function GET(request) {
+  console.log(request);
+  const searchParams = request.nextUrl.searchParams
+  console.log(searchParams)
+  const id = searchParams.get('userId')
+
+  const promptData = {
+    user: await getUserDataById(id),
+    BMI: await getBMIByUserId(id),
+    Allergies: await getAllergyById(id),
+    vitalSigns: await getVitalSignsByUserId(id),
+    prescription: await getperscriptionByUserId(id),
+    administered: await getAdministeredByUserId(id)
+  }
+
+  const result = await sendPromptToChatGPT(`
+give me  health summary using this structutre Prompt in HTML Format:
+Generate a detailed patient health summary in the following structured format:
+  (title) Personal Information
+Field Details
+Name [Name]
+DOB [Date of Birth]
+Age [Age]
+Gender [Male/Female]
+Address [Full Address]
+Background
+Field Details
+Allergy [List allergies or "None"]
+BMI [BMI value]
+Blood Type [Blood type]
+Assessments
+(title) Vital Signs
+Field Details
+Date Taken Taken By Temp Heart Rate Blood Pressure Blood Glucose Level
+[Date Taken] [Taken By] [Temp] [Heart Rate] [Blood Pressure] [Blood Glucose Level]
+[Date Taken] [Taken By] [Temp] [Heart Rate] [Blood Pressure] [Blood Glucose Level]
+[Date Taken] [Taken By] [Temp] [Heart Rate] [Blood Pressure] [Blood Glucose Level]
+Medication
+(subtitle) Prescriptions
+Field Details
+Medication Prescribed by Date Refills Dosage Side Effect Frequency
+[Medication] [Doctor Name] [Date] [Refills] [Dosage] [Side Effect] [Frequency]
+(subtitle) Administered
+Field Details
+Medication Date Administered  End Date Dosage Side Effect Effectiveness Frequency
+[Medication] [Date Administered] [End Date] [Dosage] [Side Effect] [Effectiveness] [Frequency]
+Key Notes
+[List key concerns or actions required in dot points.] in HTML format
+     about the health information below ${JSON.stringify(promptData)}`);
 
       console.log(result)
       

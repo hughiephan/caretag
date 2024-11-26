@@ -152,7 +152,7 @@ const UserDropdown = () => {
                       size='small'
                       endIcon={<i className='ri-logout-box-r-line' />}
                       onClick={handleUserLogout}
-                      href='/:lang(en|fr|ar)/login'
+                      href='/login'
                     >
                       Logout
                     </Button>

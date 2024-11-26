@@ -27,45 +27,7 @@ const TableFilters = ({ setData, tableData }) => {
 
   return (
     <CardContent>
-      <Grid container spacing={5}>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
-            <InputLabel id='role-select'>Select Role</InputLabel>
-            <Select
-              fullWidth
-              id='select-role'
-              value={role}
-              onChange={e => setRole(e.target.value)}
-              label='Select Role'
-              labelId='role-select'
-              inputProps={{ placeholder: 'Select Role' }}
-            >
-              <MenuItem value=''>Select Role</MenuItem>
-              <MenuItem value='admin'>Owner</MenuItem>
-              <MenuItem value='author'>Contributer</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth>
-            <InputLabel id='status-select'>Select Status</InputLabel>
-            <Select
-              fullWidth
-              id='select-status'
-              label='Select Status'
-              value={status}
-              onChange={e => setStatus(e.target.value)}
-              labelId='status-select'
-              inputProps={{ placeholder: 'Select Status' }}
-            >
-              <MenuItem value=''>Select Status</MenuItem>
-              <MenuItem value='pending'>Pending</MenuItem>
-              <MenuItem value='active'>Active</MenuItem>
-              <MenuItem value='inactive'>Inactive</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-      </Grid>
+
     </CardContent>
   )
 }

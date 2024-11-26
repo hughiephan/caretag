@@ -6,17 +6,18 @@ import { useState, useMemo } from 'react'
 // MUI Imports
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
-import TablePagination from '@mui/material/TablePagination'
+import Checkbox from '@mui/material/Checkbox' 
+import Button from '@mui/material/Button' 
 import Typography from '@mui/material/Typography'
-import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
+import TablePagination from '@mui/material/TablePagination'
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button' 
+import IconButton from '@mui/material/IconButton'
 
 // Third-party Imports
 import classnames from 'classnames'
+import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
   flexRender,
@@ -28,40 +29,12 @@ import {
   getPaginationRowModel,
   getSortedRowModel
 } from '@tanstack/react-table'
-import { useSession } from 'next-auth/react'
-import axios from 'axios';
+
+// Components Imports
+import OptionMenu from '@core/components/option-menu'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
-// Format the date into 'MM/DD/YYYY HH:mm:ss'
-const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`};
-
-// insert date format YYYY-MM-dd
-const formatDate = (date) => {
-  const pad = (num) => String(num).padStart(2, '0');
-
-  const year = date.getFullYear();
-  const month = pad(date.getMonth() + 1); // Months are zero-based
-  const day = pad(date.getDate());
-  const hours = pad(date.getHours());
-  const minutes = pad(date.getMinutes());
-  const seconds = pad(date.getSeconds());
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-}
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -76,57 +49,64 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   return itemRank.passed
 }
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+const administeredParams = {
+  administered_id: '',
+  medication_name: '',
+  user_id: '',
+  date_administered: '',
+  end_date: '',
+  dosage: '',
+  effectiveness_name: '',
+  side_effects: '',
+  frequency_name: ''
+}
+
 // Column Definitions
 const columnHelper = createColumnHelper()
 
-const vitalSignParams = {
-  user_id: '',
-  date_taken: '',
-  taken_by: '',
-  temperature: '',
-  heart_rate: '',
-  blood_pressure: '',
-  glucose_levels: ''
-}
-
-
-const VitalSign = ({ VitalSignResponseData }) => {
+const AdministeredTable = ({ administered }) => {
   // States
-  const { data: session, status } = useSession()
   const [rowSelection, setRowSelection] = useState({})
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState(...[VitalSignResponseData])
-  const [attributes, setAttributes] = useState(vitalSignParams)
-  const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));
-
+  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleSave = async () => {
-    candidate.user_id = session.user.id;
-    candidate.date_taken = formatDate(new Date(candidate.date_taken));
-    const response = await axios.put(`/api/pages/profile/vitalsign`, candidate);
-    if (response.status != 200) {
-      alert(`Can't update user information, please contact administrator.`);
-    }
+  const fakeData = [{
+    administered_id: 3,
+    medication_name: 'Ciprofloxacin',
+    user_id: 1,
+    date_administered: '2024-10-31T16:00:00.000Z',
+    end_date: '2024-11-29T16:00:00.000Z',
+    dosage: 10,
+    effectiveness_name: 'Medium',
+    side_effects: 'Nausea',
+    frequency_name: 'Daily'
+  }]
 
-    setAttributes(candidate);
-
-    setOpen(false);
-
-    // Force refresh the page
-    window.location.reload();
-  };
+  const [data, setData] = useState(...[administered])
+  const [attributes, setAttributes] = useState(administeredParams)
 
   const handleEdit = row => {
     setAttributes(row);
-    setCandidate(row);
     setOpen(true);
   }
-
+  
   const handleDelete = row => {
-    if (window.confirm(`Are you sure you want to delete?`)) {
+    if (window.confirm(`Are you sure you want to delete ${row.name}?`)) {
       // send DELETE request to modify DB
-      setData(prev => prev.filter(item => item.date_taken !== row.date_taken))
+      setData(prev => prev.filter(item => item.name !== row.name && item.date_diagnosed !== row.date_diagnosed))
     }
   }
 
@@ -169,35 +149,40 @@ const VitalSign = ({ VitalSignResponseData }) => {
           </Typography>
         </>
       }),
-      columnHelper.accessor('date_taken', {
-        header: 'Date Taken',
-        cell: ({ row }) => <Typography align='center'>{`${formattedDate(new Date(row.original.date_taken))}`}</Typography>
+      columnHelper.accessor('date_administered', {
+        header: 'Date Administered',
+        cell: ({ row }) => (
+            <Typography align='center'>{`${row.original.date_administered}`}</Typography>
+        )
       }),
-      columnHelper.accessor('taken_by', {
-        header: 'Taken By',
-        cell: ({ row }) => <Typography align='center'>{`${row.original.taken_by}`}</Typography>
+      columnHelper.accessor('medication_name', {
+        header: 'Medication Name',
+        cell: ({ row }) => <Typography align='center'>{`${row.original.medication_name}`}</Typography>
       }),
-      columnHelper.accessor('temperature', {
-        header: 'Temperature',
-        cell: ({ row }) => <Typography align='center'>{`${row.original.temperature}`}</Typography>
+      columnHelper.accessor('end_date', {
+        header: 'End Date',
+        cell: ({ row }) => <Typography align='center'>{`${row.original.end_date}`}</Typography>
       }),
-      columnHelper.accessor('heart_rate', {
-        header: 'Heart Rate',
-        cell: ({ row }) => <Typography align='center'>{`${row.original.heart_rate}`}</Typography>
+      columnHelper.accessor('dosage', {
+        header: 'Dosage',
+        cell: ({ row }) => <Typography align='center'>{`${row.original.dosage}`}</Typography>
       }),
-      columnHelper.accessor('blood_pressure', {
-        header: 'Blood Pressure',
-        cell: ({ row }) => <Typography align='center'>{`${row.original.blood_pressure}`}</Typography>
+      columnHelper.accessor('effectiveness_name', {
+        header: 'Effectiveness Name',
+        cell: ({ row }) => <Typography align='center'>{`${row.original.effectiveness_name}`}</Typography>
       }),
-      columnHelper.accessor('glucose_levels', {
-        header: 'Glucose Levels',
-        cell: ({ row }) => <Typography align='center'>{`${row.original.glucose_levels}`}</Typography>
+      columnHelper.accessor('side_effects', {
+        header: 'Side Effects',
+        cell: ({ row }) => <Typography align='center'>{`${row.original.side_effects}`}</Typography>
+      }),
+      columnHelper.accessor('frequency_name', {
+        header: 'Frequency Name',
+        cell: ({ row }) => <Typography align='center'>{`${row.original.frequency_name}`}</Typography>
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
-
 
   const table = useReactTable({
     data: data,
@@ -209,7 +194,7 @@ const VitalSign = ({ VitalSignResponseData }) => {
       rowSelection
     },
     initialState: {
-      sorting: [{ id: 'date_taken', desc: true }],
+      sorting: [{ id: 'date_administered', desc: true }],
       pagination: {
         pageSize: 5
       }
@@ -228,7 +213,7 @@ const VitalSign = ({ VitalSignResponseData }) => {
   return (
     <>
       <Card>
-        <CardHeader title='Vital sign History' subheader=''/>
+        <CardHeader title='Administered History' action={<OptionMenu options={['Refresh', 'Update', 'Share']} />} />
         <div className='overflow-x-auto'>
           <table className={tableStyles.table}>
             <thead>
@@ -304,64 +289,73 @@ const VitalSign = ({ VitalSignResponseData }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <div>
           <TextField
             fullWidth
-            disabled
-            label="Date taken"
+            label="Name"
             id="filled-hidden-label-small"
-            defaultValue={formatDate(new Date(attributes.date_taken))}
-            onChange={event => candidate.date_taken = formatDate(new Date(event.target.value))}
+            defaultValue={attributes.name}
             variant="filled"
             size="small"
           />
           <TextField
             fullWidth
-            label="Taken by"
+            label="Category"
             id="filled-hidden-label-small"
-            defaultValue={attributes.taken_by}
-            onChange={event => candidate.taken_by = event.target.value}
+            defaultValue={attributes.category}
             variant="filled"
             size="small"
           />
           <TextField
             fullWidth
-            disabled
-            label="Temperature"
+            label="Common Symptoms"
             id="filled-hidden-label-small"
-            defaultValue={attributes.temperature}
-            onChange={event => candidate.temperature = event.target.value}
+            defaultValue={attributes.commonSymptoms}
             variant="filled"
             size="small"
           />
           <TextField
             fullWidth
-            disabled
-            label="Heart rate"
+            label="Description"
             id="filled-hidden-label-small"
-            defaultValue={attributes.heart_rate}
-            onChange={event => candidate.heart_rate = event.target.value}
+            defaultValue={attributes.description}
             variant="filled"
             size="small"
           />
           <TextField
             fullWidth
-            label="Blood pressure"
+            label="Symptoms"
             id="filled-hidden-label-small"
-            defaultValue={attributes.blood_pressure}
-            onChange={event => candidate.blood_pressure = event.target.value}
+            defaultValue={attributes.symptoms}
             variant="filled"
             size="small"
           />
           <TextField
             fullWidth
-            label="Glucose levels"
+            label="Serverity"
             id="filled-hidden-label-small"
-            defaultValue={attributes.glucose_levels}
-            onChange={event => candidate.glucose_levels = event.target.value}
+            defaultValue={attributes.serverity}
             variant="filled"
             size="small"
-          /> 
-          <Button onClick={handleSave}>Save</Button>
+          />
+          <TextField
+            fullWidth
+            label="Date Diagnosed"
+            id="filled-hidden-label-small"
+            defaultValue={attributes.dateDiagnosed}
+            variant="filled"
+            size="small"
+          />
+          <TextField
+            fullWidth
+            label="Notes"
+            id="filled-hidden-label-small"
+            defaultValue={attributes.notes}
+            variant="filled"
+            size="small"
+          />            
+          </div>
+          <Button onClick={handleClose}>Save</Button>
           <Button onClick={handleClose}>Cancel</Button>
         </Box>
       </Modal>
@@ -369,4 +363,4 @@ const VitalSign = ({ VitalSignResponseData }) => {
   )
 }
 
-export default VitalSign
+export default AdministeredTable
