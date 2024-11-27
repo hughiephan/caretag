@@ -12,6 +12,9 @@ import { useTheme } from '@mui/material/styles'
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
+// Format the date into 'MM/DD/YYYY HH:mm:ss'
+const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`};
+
 const BMI = ({ BMIResponseData }) => {
   // Hooks
   const theme = useTheme()
@@ -20,17 +23,13 @@ const BMI = ({ BMIResponseData }) => {
   const series = []
 
   const historyList = {
-    weight: [],
-    height: [],
     bmi: []
   }
 
   // split each attributes into datasets
   BMIResponseData.forEach(item => {
-    dates.push(item.date)
-    historyList.weight.push(item.weight)
-    historyList.height.push(item.height)
-    historyList.bmi.push(item.bmi)
+    dates.push(formattedDate( new Date(item.date)))
+    historyList.bmi.push(item.BMI)
   })
 
   Object.keys(historyList).forEach(key => {
@@ -118,7 +117,7 @@ const BMI = ({ BMIResponseData }) => {
         }
       },
       min: 0,
-      max: 300
+      max: 50
     }
   }
 

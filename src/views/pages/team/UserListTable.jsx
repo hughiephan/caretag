@@ -3,10 +3,6 @@
 // React Imports
 import { useEffect, useState, useMemo } from 'react'
 
-// Next Imports
-import Link from 'next/link'
-import { useParams } from 'next/navigation'
-
 // MUI Imports
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -35,16 +31,12 @@ import {
   getPaginationRowModel,
   getSortedRowModel
 } from '@tanstack/react-table'
+import { useSession } from 'next-auth/react'
+import axios from 'axios';
 
 // Component Imports
 import TableFilters from './TableFilters'
 import AddUserDrawer from './AddUserDrawer'
-import OptionMenu from '@core/components/option-menu'
-import CustomAvatar from '@core/components/mui/Avatar'
-
-// Util Imports
-import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
@@ -84,34 +76,18 @@ const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...prop
   return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
 }
 
-// Vars
-const userRoleObj = {
-  admin: { icon: 'ri-vip-crown-line', color: 'error' },
-  author: { icon: 'ri-computer-line', color: 'warning' },
-  editor: { icon: 'ri-edit-box-line', color: 'info' },
-  maintainer: { icon: 'ri-pie-chart-2-line', color: 'success' },
-  subscriber: { icon: 'ri-user-3-line', color: 'primary' }
-}
-
-const userStatusObj = {
-  active: 'success',
-  pending: 'warning',
-  inactive: 'secondary'
-}
-
 // Column Definitions
 const columnHelper = createColumnHelper()
 
-const UserListTable = ({ tableData }) => {
+const UserListTable = () => {
   // States
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
-  const [data, setData] = useState(...[tableData])
+  const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState(data)
   const [globalFilter, setGlobalFilter] = useState('')
-
-  // Hooks
-  const { lang: locale } = useParams()
+  const { data: session, status } = useSession()
+  const [doFetch, setDoFetch] = useState(true);
 
   const columns = useMemo(
     () => [
@@ -138,15 +114,17 @@ const UserListTable = ({ tableData }) => {
         )
       },
       columnHelper.accessor('fullName', {
-        header: 'User',
+        header: 'Contact',
         cell: ({ row }) => (
           <div className='flex items-center gap-3'>
-            {getAvatar({ avatar: row.original.avatar, fullName: row.original.fullName })}
             <div className='flex flex-col'>
               <Typography color='text.primary' className='font-medium'>
-                {row.original.fullName}
+                {
+                 row.original.first_name.charAt(0).toUpperCase() +row.original.first_name.slice(1) + ' ' +
+                 (row.original.middle_names ? row.original.middle_names.charAt(0).toUpperCase()  +row.original.middle_names?.slice(1) + ' ' : '') + 
+                 row.original.last_name.charAt(0).toUpperCase() +row.original.last_name.slice(1)
+                }
               </Typography>
-              <Typography variant='body2'>{row.original.username}</Typography>
             </div>
           </div>
         )
@@ -155,31 +133,23 @@ const UserListTable = ({ tableData }) => {
         header: 'Email',
         cell: ({ row }) => <Typography>{row.original.email}</Typography>
       }),
-      columnHelper.accessor('role', {
-        header: 'Role',
+      columnHelper.accessor('phone', {
+        header: 'Phone',
         cell: ({ row }) => (
           <div className='flex items-center gap-2'>
-            <Icon
-              className={classnames('text-[22px]', userRoleObj[row.original.role].icon)}
-              sx={{ color: `var(--mui-palette-${userRoleObj[row.original.role].color}-main)` }}
-            />
             <Typography className='capitalize' color='text.primary'>
-              {row.original.role}
+              {row.original.phone}
             </Typography>
           </div>
         )
       }),
-      columnHelper.accessor('status', {
-        header: 'Status',
+      columnHelper.accessor('relation', {
+        header: 'Relationship',
         cell: ({ row }) => (
           <div className='flex items-center gap-3'>
-            <Chip
-              variant='tonal'
-              label={row.original.status}
-              size='small'
-              color={userStatusObj[row.original.status]}
-              className='capitalize'
-            />
+            <Typography className='capitalize' color='text.primary'>
+              {row.original.relationship}
+            </Typography>
           </div>
         )
       }),
@@ -187,27 +157,16 @@ const UserListTable = ({ tableData }) => {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center gap-0.5'>
-            <IconButton size='small' onClick={() => setData(data?.filter(product => product.id !== row.original.id))}>
+            <IconButton size='small' onClick={async () => {
+              const res = await axios.delete('/api/pages/contact', {data: {user_id:session.user.id, email:row.original.email}})
+              console.log(await res)
+              setData(data?.filter(user => user.email !== row.original.email));
+            }}>
               <i className='ri-delete-bin-7-line text-textSecondary' />
             </IconButton>
-            <IconButton size='small'>
-              <Link href={getLocalizedUrl('/apps/user/view', locale)} className='flex'>
-                <i className='ri-eye-line text-textSecondary' />
-              </Link>
-            </IconButton>
-            <OptionMenu
-              iconClassName='text-textSecondary'
-              options={[
-                {
-                  text: 'Download',
-                  icon: 'ri-download-line'
-                },
-                {
-                  text: 'Edit',
-                  icon: 'ri-edit-box-line'
-                }
-              ]}
-            />
+            {/* <IconButton size='small' onClick={() => {}}>
+              <i className='ri-edit-box-line text-textSecondary' />
+            </IconButton> */}
           </div>
         ),
         enableSorting: false
@@ -216,6 +175,25 @@ const UserListTable = ({ tableData }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, filteredData]
   )
+
+  const getContacts = async (id) => {
+    const response = await axios.get(`/api/pages/contact?userId=${id}`);
+    
+    if (response.status != 200) {
+      alert(`Can't get user contacts, please contact administrator.`);
+    }
+    console.log(await response);
+    const json = await response.data;
+
+    console.log(json);
+
+    setData(json);
+  }
+
+  if (status === "authenticated" && doFetch) {
+    getContacts(session.user.id);
+    setDoFetch(false);
+  }
 
   const table = useReactTable({
     data: filteredData,
@@ -246,24 +224,11 @@ const UserListTable = ({ tableData }) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  const getAvatar = params => {
-    const { avatar, fullName } = params
-
-    if (avatar) {
-      return <CustomAvatar src={avatar} skin='light' size={34} />
-    } else {
-      return (
-        <CustomAvatar skin='light' size={34}>
-          {getInitials(fullName)}
-        </CustomAvatar>
-      )
-    }
-  }
 
   return (
     <>
       <Card>
-        <CardHeader title='Filters' className='pbe-4' />
+        <CardHeader title='Contacts' className='pbe-4' />
         <TableFilters setData={setFilteredData} tableData={data} />
         <Divider />
         <div className='flex justify-between gap-4 p-5 flex-col items-start sm:flex-row sm:items-center'>
@@ -275,7 +240,7 @@ const UserListTable = ({ tableData }) => {
               className='max-sm:is-full'
             />
             <Button variant='contained' onClick={() => setAddUserOpen(!addUserOpen)} className='max-sm:is-full'>
-              Add New User
+              Add New Contact
             </Button>
           </div>
         </div>

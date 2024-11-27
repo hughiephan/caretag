@@ -20,6 +20,8 @@ import VitalSignForm from './vitalSignForm'
 import BMI from './dashboard/bmi'
 import AllergyTable from './dashboard/allergy' 
 import VitalSign from './dashboard/vital-sign'
+import PrescriptionTable from './dashboard/prescription'
+import AdministeredTable from './dashboard/administered';
 
 const ProfileTab = () => {
   const [doFetch, setDoFetch] = useState(true);
@@ -63,6 +65,18 @@ const ProfileTab = () => {
         <LinearProgress />
       </Box>
     );
+  } else {
+    // sort data
+    result.BMI = result.BMI.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    })
+    result.allergies = result.allergies.sort((a, b) => {
+      return new Date(b.date_diagnosed) - new Date(a.date_diagnosed);
+    })
+    result.vitalSigns = result.vitalSigns.sort((a, b) => {
+      return new Date(b.date_taken) - new Date(a.date_taken);
+    })
+
   }
 
   return (
@@ -91,6 +105,12 @@ const ProfileTab = () => {
           </Grid>
           <Grid item xs={12}>
             <VitalSign VitalSignResponseData={result.vitalSigns} />
+          </Grid>
+          <Grid item xs={12}>
+            <PrescriptionTable prescriptions={result.prescriptions} />
+          </Grid>
+          <Grid item xs={12}>
+            <AdministeredTable administered={result.administered}/>
           </Grid>
         </Grid>
       </Grid>

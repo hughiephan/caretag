@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography'
 
 // Third-party Imports
 import { toast } from 'react-toastify'
+const axios = require('axios');
+import { useSession } from 'next-auth/react'
 
 // Icon Imports
 import { useDropzone } from 'react-dropzone'
@@ -18,18 +20,53 @@ import { useDropzone } from 'react-dropzone'
 const FileUploaderRestrictions = () => {
   // States
   const [files, setFiles] = useState([])
-  const [uploading, setUploading] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState([])
+  const [uploading, setUploading] = useState(false)
+  const { data: session, status } = useSession()
+
+  const [fileOnloadList, setFileOnloadList] = useState([])
 
   // Hooks
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 2,
-    maxSize: 2000000,
+    maxFiles: 10,
+    maxSize: 20000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'image/*': ['.png', '.jpg', '.jpeg', '.gif'],
+      'text/plain': ['.txt', '.csv', '.json'],
+      'application/pdf': ['.pdf']
     },
     onDrop: acceptedFiles => {
-      setFiles(acceptedFiles.map(file => Object.assign(file)))
+      // debug
+      // console.log("onDrop")
+      // console.log(acceptedFiles)
+      
+      acceptedFiles.forEach((file) => {
+        const reader = new FileReader()
+  
+        reader.onabort = () => console.log('file reading was aborted')
+        reader.onerror = () => console.log('file reading has failed')
+        reader.onload = () => {
+          const binaryStr = reader.result
+          console.log(binaryStr)
+
+          // Create an object with file details and ArrayBuffer
+          const fileObject = {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            data: Buffer.from(binaryStr).toString('base64')
+          };
+
+          // Update the state with the new file object
+          setFileOnloadList(prev => [...prev, fileObject])
+
+          // Log the file object to the console
+          console.log('File added to list:', fileObject)
+        }
+
+        reader.readAsArrayBuffer(file)
+      })
+      setFiles(acceptedFiles)
     },
     onDropRejected: () => {
       toast.error('You can only upload 2 files & maximum size of 2 MB.', {
@@ -49,8 +86,44 @@ const FileUploaderRestrictions = () => {
   const handleRemoveFile = file => {
     const uploadedFiles = files
     const filtered = uploadedFiles.filter(i => i.name !== file.name)
-
+    const filteredFileOnloadList = fileOnloadList.filter(i => i.name !== file.name)
     setFiles([...filtered])
+    setFileOnloadList(filteredFileOnloadList)
+  }
+
+  const handleRemoveAllFiles = () => {
+    setFileOnloadList([])
+    setFiles([])
+  }
+
+  const handleUploadAllFiles = async () => {
+    const uploadedFiles = fileOnloadList
+
+    console.log(uploadedFiles)
+
+    if (uploadedFiles.length === 0 || status != "authenticated") {
+      return
+    }
+
+    setUploading(true)
+
+    const uploadedFilesList = []
+
+    try {
+      // upload file to cloud storage
+      let response = await axios.post(`/api/pages/document`, {files: fileOnloadList, userId: session.user.id});
+      if (response) {
+        alert("Files are uploaded!");
+        // Force refresh the page
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error(`Error uploading ${error}`)
+    }
+
+    
+    setUploading(false)
+    handleRemoveAllFiles()
   }
 
   const fileList = files.map(file => (
@@ -72,37 +145,6 @@ const FileUploaderRestrictions = () => {
     </ListItem>
   ))
 
-  const handleRemoveAllFiles = () => {
-    setFiles([])
-  }
-
-  const handleUploadAllFiles = async () => {
-    const uploadedFiles = files
-
-    console.log(uploadedFiles)
-
-    if (uploadedFiles.length === 0) {
-      return
-    }
-
-    setUploading(true)
-
-    const uploadedFilesList = []
-
-    for (let file of files) {
-      try {
-        // upload file to cloud storage
-        uploadedFilesList.push(file)
-      } catch (error) {
-        console.error(`Error uploading ${file.name}:`, error)
-      }
-    }
-
-    setUploadedFiles(uploadedFilesList)
-    setUploading(false)
-    handleRemoveAllFiles()
-  }
-
   return (
     <>
       <div {...getRootProps({ className: 'dropzone' })}>
@@ -114,8 +156,8 @@ const FileUploaderRestrictions = () => {
           <Typography variant='h4' className='mbe-2.5'>
             Drop files here or click to upload.
           </Typography>
-          <Typography color='text.secondary'>Allowed *.jpeg, *.jpg, *.png, *.gif</Typography>
-          <Typography color='text.secondary'>Max 2 files and max size of 2 MB</Typography>
+          <Typography color='text.secondary'>Allowed only image, text and pdf file</Typography>
+          <Typography color='text.secondary'>Max 10 files and max size of 20 MB</Typography>
         </div>
       </div>
       {files.length ? (
