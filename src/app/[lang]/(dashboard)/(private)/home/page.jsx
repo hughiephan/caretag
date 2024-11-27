@@ -10,13 +10,13 @@ const HomePage = () => {
 
   return (
   <>
-    <div style={{ 
+    {/* <div style={{ 
       backgroundImage: `url(${'/images/pages/backgroundV2.png'})`,
       backgroundRepeat: 'no-repeat',
       width:'100%' ,
-    }}>
+    }}> */}
       <HomePageWrapper mode={mode} />
-    </div>
+    {/* </div> */}
   </>)
 }
 
