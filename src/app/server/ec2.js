@@ -1,8 +1,9 @@
 // import { createRequire } from "module";
 // const require = createRequire(import.meta.url);
+import mime from 'mime-types';
 const os = require('os');
 const fs = require('fs');
-const path = require('path'); 
+const path = require('path');
 
 const BASE_PATH = os.homedir();
 
@@ -56,7 +57,7 @@ export const readFiles = async (userId) => {
     if (!fs.existsSync(directoryPath)) {
         console.log(`directory ${userId} is not exist, start creating ...`)
         fs.mkdirSync(directoryPath, {recursive:true});
-        
+
         return files;
     }
 
@@ -67,10 +68,56 @@ export const readFiles = async (userId) => {
 
         // debug
         files.forEach(file => console.log(file))
-        
+
     } catch (error) {
         console.log(error);
     } finally {
         return files;
+    }
+}
+
+/*
+@params
+    userId: string
+    files: string[]
+@return: [{name:string, data: (base64) string}]
+*/
+export const downloadFiles = async (userId, fileName) => {
+    const directoryPath = path.join(BASE_PATH, `${userId}`);
+
+    try {
+        const fileBuffer = await fs.readFileSync(`${directoryPath}/${fileName}`);
+
+        return {name: fileName, data: Buffer.from(fileBuffer).toString('base64'), type: determineFileType(fileName)};
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const determineFileType = (filePath) => {
+    const mimeType = mime.lookup(filePath); // Example: "application/pdf" or "image/png"
+
+    return mimeType || 'Unknown type';
+};
+
+
+/*
+@params
+    userId: string
+    files: string[]
+@return: [{name:string, data: (base64) string}]
+*/
+export const deleteFiles = async (userId, files) => {
+    const directoryPath = path.join(BASE_PATH, `${userId}`);
+
+    if (!fs.existsSync(directoryPath)) {
+        console.log(`directory ${userId} is not exist, start creating ...`)
+        fs.mkdirSync(directoryPath, {recursive:true});
+    }
+
+    try {
+        files.forEach(fileName => fs.rmSync(`${directoryPath}/${fileName}`))
+    } catch (error) {
+        console.log(error);
     }
 }

@@ -133,11 +133,13 @@ const PrescriptionTable = ({prescriptions}) => {
   const handleDelete = async row => {
     if (window.confirm(`Are you sure you want to delete?`)) {
       // send DELETE request to modify DB
-      setCandidate(row);
-      const response = await axios.delete(`/api/pages/profile/prescription?id=${candidate.prescription_id}`);
+
+      const response = await axios.delete(`/api/pages/profile/prescription?id=${row.prescription_id}`);
+
       if (response.status != 200) {
         alert(`Can't delete user information, please contact administrator.`);
       }
+
       setData(prev => prev.filter(item => item.date !== row.date))
     }
   }
@@ -148,11 +150,15 @@ const PrescriptionTable = ({prescriptions}) => {
     console.log(candidate)
 
     const response = await axios.post(`/api/pages/profile/prescription`, candidate);
+
     if (response.status != 200) {
       alert(`Can't update user information, please contact administrator.`);
     }
 
     setAdd(false);
+    
+    // Force refresh the page
+    window.location.reload();
   };
 
   const Fakeprescriptions = [

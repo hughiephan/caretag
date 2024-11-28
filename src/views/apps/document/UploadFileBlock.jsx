@@ -39,14 +39,15 @@ const FileUploaderRestrictions = () => {
       // debug
       // console.log("onDrop")
       // console.log(acceptedFiles)
-      
+
       acceptedFiles.forEach((file) => {
         const reader = new FileReader()
-  
+
         reader.onabort = () => console.log('file reading was aborted')
         reader.onerror = () => console.log('file reading has failed')
         reader.onload = () => {
           const binaryStr = reader.result
+
           console.log(binaryStr)
 
           // Create an object with file details and ArrayBuffer
@@ -87,6 +88,7 @@ const FileUploaderRestrictions = () => {
     const uploadedFiles = files
     const filtered = uploadedFiles.filter(i => i.name !== file.name)
     const filteredFileOnloadList = fileOnloadList.filter(i => i.name !== file.name)
+
     setFiles([...filtered])
     setFileOnloadList(filteredFileOnloadList)
   }
@@ -112,8 +114,10 @@ const FileUploaderRestrictions = () => {
     try {
       // upload file to cloud storage
       let response = await axios.post(`/api/pages/document`, {files: fileOnloadList, userId: session.user.id});
+
       if (response) {
         alert("Files are uploaded!");
+
         // Force refresh the page
         window.location.reload()
       }
@@ -121,7 +125,7 @@ const FileUploaderRestrictions = () => {
       console.error(`Error uploading ${error}`)
     }
 
-    
+
     setUploading(false)
     handleRemoveAllFiles()
   }

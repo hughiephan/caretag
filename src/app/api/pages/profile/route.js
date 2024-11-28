@@ -66,53 +66,6 @@ export async function PUT(request) {
   console.log("body")
   console.log(body)
 
-  // extract gender
-
-  const gender = await getGenderByName(body.gender_name)
-
-  console.log("gender")
-  console.log(gender)
-
-  if (gender != null || gender != undefined) {
-    body.gender_id = gender[0].gender_id;
-  } else {
-    body.gender_id = 1 // defualt
-  }
-
-  delete body.gender_name;
-
-  // extract sex
-
-  const sex = await getSexByName(body.sex_name)
-
-  console.log("sex")
-  console.log(sex)
-
-  if (sex != null || sex != undefined) {
-    body.sex_id = sex[0].sex_id;
-  } else {
-    body.sex_id = 1 // defualt
-  }
-
-  delete body.sex_name;
-
-  // extract blood type
-
-  const blood_type = await getBloodTypeByName(body.blood_type_name)
-
-  console.log("blood_type")
-  console.log(blood_type)
-
-  if (blood_type != null || blood_type != undefined) {
-    body.blood_type_id = blood_type[0].blood_type_id;
-  } else {
-    body.blood_type_id = 1 // defualt
-  }
-
-  delete body.blood_type_name;
-
-  console.log(body)
-
   const res = await updateUserDataByid(body);
   
   console.log(res);

@@ -10,6 +10,9 @@ import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 // Third-party Imports
 import { useSession } from 'next-auth/react'
@@ -30,6 +33,17 @@ const style = {
 // Format the date into 'MM/DD/YYYY'
 const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`};
 
+// insert date format YYYY-MM-dd
+const formatDate = (date) => {
+  const pad = (num) => String(num).padStart(2, '0');
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1); // Months are zero-based
+  const day = pad(date.getDate());
+
+  return `${year}-${month}-${day}`;
+}
+
 const AboutOverview = ({ user }) => {
   const [open, setOpen] = useState(false);
 
@@ -43,7 +57,10 @@ const AboutOverview = ({ user }) => {
     }
 
     candidate.user_id = session.user.id;
-
+    candidate.sex_id = candidate.gender_id;
+    delete candidate.gender_name
+    delete candidate.sex_name
+    delete candidate.blood_type_name
     console.log(candidate)
 
     const response = await axios.put(`/api/pages/profile`,candidate);
@@ -72,10 +89,6 @@ const AboutOverview = ({ user }) => {
     setAttributes(user[0]);
     setOpen(true);
   }
-
-
-  console.log("user");
-  console.log(user)
   
   return (
     <Grid container spacing={6}>
@@ -200,6 +213,27 @@ const AboutOverview = ({ user }) => {
                 />
                 <TextField
                   fullWidth
+                  label="Date of Birth"
+                  id="filled-hidden-label-small"
+                  defaultValue={formatDate(new Date(attributes.dob))}
+                  onChange={event => candidate.dob = formatDate(new Date(event.target.value))}
+                  variant="filled"
+                  size="small"
+                />
+                <InputLabel id="gender-select-label">Gender</InputLabel>
+                <Select
+                  fullWidth
+                  labelId="gender-select-label"
+                  id="gender-select"
+                  defaultValue={attributes.gender_name == 'Male' ? 1 : 2}
+                  onChange={event => candidate.gender_id = event.target.value}
+                  label="Gender"
+                >
+                  <MenuItem value={1}>Male</MenuItem>
+                  <MenuItem value={2}>Female</MenuItem>
+                </Select>
+                <TextField
+                  fullWidth
                   label="Phone"
                   id="filled-hidden-label-small"
                   defaultValue={attributes.phone}
@@ -243,15 +277,24 @@ const AboutOverview = ({ user }) => {
                   variant="filled"
                   size="small"
                 />
-                <TextField
+                <InputLabel id="blood_type-select-label">Blood Type</InputLabel>
+                <Select
                   fullWidth
+                  labelId="blood_type-select-label"
+                  id="blood_type-select"
+                  defaultValue={1}
+                  onChange={event => candidate.blood_type_id = event.target.value}
                   label="Blood Type"
-                  id="filled-hidden-label-small"
-                  defaultValue={attributes.blood_type_name}
-                  onChange={event => candidate.blood_type_name = event.target.value}
-                  variant="filled"
-                  size="small"
-                />
+                >
+                  <MenuItem value={1}>O+</MenuItem>
+                  <MenuItem value={2}>O-</MenuItem>
+                  <MenuItem value={3}>A+</MenuItem>
+                  <MenuItem value={4}>A-</MenuItem>
+                  <MenuItem value={5}>B+</MenuItem>
+                  <MenuItem value={6}>B-</MenuItem>
+                  <MenuItem value={7}>AB+</MenuItem>
+                  <MenuItem value={8}>AB-</MenuItem>
+                </Select>
                 </div>
                 <Button onClick={handleSave}>Save</Button>
                 <Button onClick={handleClose}>Cancel</Button>

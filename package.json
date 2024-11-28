@@ -60,6 +60,7 @@
     "input-otp": "1.2.4",
     "keen-slider": "6.8.6",
     "mapbox-gl": "3.5.2",
+    "mime-types": "^2.1.35",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.4",
     "negotiator": "0.6.3",

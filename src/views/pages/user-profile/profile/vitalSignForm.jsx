@@ -21,14 +21,14 @@ const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(
 // insert date format
 const formatDate = (date) => {
     const pad = (num) => String(num).padStart(2, '0');
-  
+
     const year = date.getFullYear();
     const month = pad(date.getMonth() + 1); // Months are zero-based
     const day = pad(date.getDate());
     const hours = pad(date.getHours());
     const minutes = pad(date.getMinutes());
     const seconds = pad(date.getSeconds());
-  
+
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
@@ -36,10 +36,11 @@ const VitalSignForm = ({ VitalSignResponseData }) => {
     const { data: session, status } = useSession()
     const [attributes, setAttributes] = useState(JSON.parse(JSON.stringify(VitalSignResponseData[0])))
     const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));
-    
+
     const handleAdd = async () => {
         if (status != "authenticated") {
             console.log('missing user id to update bmi')
+
             return;
         }
 
@@ -48,19 +49,19 @@ const VitalSignForm = ({ VitalSignResponseData }) => {
 
         console.log(candidate)
         const response = await axios.post(`/api/pages/profile/vitalsign`, candidate);
-        
+
         if (response.status != 200) {
             alert(`Can't update user information, please contact administrator.`);
         }
 
         setAttributes(candidate);
-        
+
         // Force refresh the page
         window.location.reload();
     };
 
     return (
-        <>  
+        <>
         <Card>
             <CardHeader title='Vital sign History' subheader='' />
             <CardContent>
@@ -108,7 +109,7 @@ const VitalSignForm = ({ VitalSignResponseData }) => {
                 <TextField
                 fullWidth
                 disabled
-                label="Date take"
+                label="Last time taken date"
                 id="filled-hidden-label-small"
                 defaultValue={formattedDate(new Date(attributes.date_taken))}
                 variant="filled"

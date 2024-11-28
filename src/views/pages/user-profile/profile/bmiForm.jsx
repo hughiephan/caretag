@@ -36,16 +36,17 @@ const BMIForm = ({ BMIResponseData }) => {
     const { data: session, status } = useSession()
     const [attributes, setAttributes] = useState(JSON.parse(JSON.stringify(BMIResponseData[0])))
     const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));
-    console.log(attributes);
+
     const handleAdd = async () => {
         if (status != "authenticated") {
             console.log('missing user id to update bmi')
+            
             return;
         }
 
         candidate.user_id = session.user.id;
         candidate.date = formatDate(new Date());
-        console.log(candidate)
+
         const response = await axios.post(`/api/pages/profile/bmi`, candidate);
         
         if (response.status != 200) {

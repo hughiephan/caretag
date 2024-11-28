@@ -148,8 +148,8 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
     setIsMenuOpen(false)
   }
 
-  return (
-    !breakpointReached && (
+  return (<>
+    {/* !breakpointReached && (
       <div
         className={classnames('customizer', styles.customizer, {
           [styles.show]: isOpen,
@@ -463,7 +463,8 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
           </div>
         </ScrollWrapper>
       </div>
-    )
+    ) */}
+    </>
   )
 }
 

@@ -217,10 +217,10 @@ export const addUsersAllergyByUserId = async (data) => {
   return pool.POST(columns,table,values);
 }
 
-export const modifyUsersAllergyByUserId = async (data) => {
+export const modifyUsersAllergyById = async (data) => {
   const table = `USERS_ALLERGY`;
   const values = data;
-  const conditions = `WHERE user_id = '${data.user_id}' AND date_diagnosed='${data.date_diagnosed}'`;
+  const conditions = `WHERE allergy_id = '${data.allergy_id}'`;
   
   return pool.PUT(table,values,conditions);
 }
@@ -293,6 +293,13 @@ export const addVitalSignByUserId = async (data) => {
   values = values.slice(0, -2);
   
   return pool.POST(columns,table,values);
+}
+
+export const deleteVitalSignByUserIdandDate = async (data) => {
+  const table = `VITAL_SIGNS`;
+  const conditions = `user_id = '${data.user_id}' AND date_taken = '${data.date_taken}'`;
+
+  return pool.DELETE(table,conditions);
 }
 
 // Medication
