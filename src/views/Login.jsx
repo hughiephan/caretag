@@ -17,6 +17,8 @@ import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Divider from '@mui/material/Divider'
 import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 
 // Third-party Imports
 import { signIn } from 'next-auth/react'
@@ -65,6 +67,7 @@ const Login = ({ mode }) => {
   const searchParams = useSearchParams()
   const { lang: locale } = useParams()
   const { settings } = useSettings()
+  const [doOnce, setDoOnce] = useState(true)
 
   const {
     control,
@@ -77,6 +80,29 @@ const Login = ({ mode }) => {
       password: 'admin'
     }
   })
+
+  const autoLogin = async (token)=> {
+    
+    console.log('using token to signin')
+
+    const result = await signIn("credentials", {
+      token,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      router.push("/pages/user-profile");
+    }
+  }
+
+  const token = searchParams.get('token');
+
+  if (token && doOnce) {
+    autoLogin(token);
+    setDoOnce(false);
+  }
 
   const authBackground = useImageVariant(mode, lightImg, darkImg)
 
@@ -109,6 +135,14 @@ const Login = ({ mode }) => {
         setErrorState(error)
       }
     }
+  }
+
+  if (!doOnce) {
+    return (
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress />
+      </Box>
+    );
   }
 
   return (

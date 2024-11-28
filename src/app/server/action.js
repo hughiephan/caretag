@@ -51,6 +51,15 @@ export const getUserDataByEmail = async (email) => {
   return pool.GET(columns,table,join,conditions);
 }
 
+export const getUserDataByName = async (email) => {
+  const columns = `*`;
+  const table = `USERS`;
+  const join = ``;
+  const conditions = `WHERE email = '${email}'`;
+
+  return pool.GET(columns,table,join,conditions);
+}
+
 export const updateUserDataByid = async (data) => {
   const table = `USERS`
   const values = data;
@@ -88,6 +97,7 @@ export const addUserContactByUserId = async (data) => {
     columns += `${key}, `
     values += `'${data[key]}', `
   }
+
   columns = columns.slice(0, -2);
   values = values.slice(0, -2);
   
@@ -97,7 +107,9 @@ export const addUserContactByUserId = async (data) => {
 export const deleteUserContactByUserIdAndContactId = async (userId, contactId) => {
   const table = `USERS_CONTACT`;
   const conditions = `user_id = '${userId}' AND contact_id = '${contactId}'`;
-  return pool.DELETE(table,conditions);
+
+  
+return pool.DELETE(table,conditions);
 }
 
 // Address
@@ -154,6 +166,7 @@ export const addBMIByUserId = async (data) => {
     columns += `${key}, `
     values += `'${data[key]}', `
   }
+
   columns = columns.slice(0, -2);
   values = values.slice(0, -2);
   
@@ -169,6 +182,7 @@ export const addBMIByUserId = async (data) => {
   description: 'Allergic reaction to peanuts and peanut-containing products.',
   name: 'Other'
 }`
+
 export const getAllergies = async () => {
   const columns = `*`;
   const table = `ALLERGY`;
@@ -196,6 +210,7 @@ export const addUsersAllergyByUserId = async (data) => {
     columns += `${key}, `
     values += `'${data[key]}', `
   }
+
   columns = columns.slice(0, -2);
   values = values.slice(0, -2);
   
@@ -273,6 +288,7 @@ export const addVitalSignByUserId = async (data) => {
     columns += `${key}, `
     values += `'${data[key]}', `
   }
+
   columns = columns.slice(0, -2);
   values = values.slice(0, -2);
   
@@ -337,7 +353,9 @@ export const modifyAdministeredById = async (data) => {
 export const deleteAdministeredById = async (id) => {
   const table = `ADMINISTERED`;
   const conditions = `administered_id = '${id}'`;
-  return pool.DELETE(table,conditions);
+
+  
+return pool.DELETE(table,conditions);
 }
 
 export const addAdministeredById = async (data) => {
@@ -349,11 +367,13 @@ export const addAdministeredById = async (data) => {
     columns += `${key}, `
     values += `'${data[key]}', `
   }
+
   columns = columns.slice(0, -2);
   values = values.slice(0, -2);
   console.log(columns)
   console.log(values)
-  return pool.POST(columns,table,values);
+  
+return pool.POST(columns,table,values);
 } 
 
 // Gender
@@ -387,7 +407,9 @@ export const getBloodTypeByName = async (name) => {
 export const getSeverities = async () => {
   const columns = `*`;
   const table = `SEVERITY`;
-  return pool.GET(columns,table,``,``);
+
+  
+return pool.GET(columns,table,``,``);
 }
 
 
@@ -415,15 +437,19 @@ export const addPrescription = async (data) => {
     columns += `${key}, `
     values += `'${data[key]}', `
   }
+
   columns = columns.slice(0, -2);
   values = values.slice(0, -2);
   console.log(columns)
   console.log(values)
-  return pool.POST(columns,table,values);
+  
+return pool.POST(columns,table,values);
 } 
 
 export const deletePrescriptionById = async (id) => {
   const table = `PRESCRIPTION`;
   const conditions = `prescription_id = '${id}'`;
-  return pool.DELETE(table,conditions);
+
+  
+return pool.DELETE(table,conditions);
 }

@@ -8,13 +8,26 @@ import {getUserDataByEmail} from '@/app/server/action'
 
 export async function POST(req) {
   // Vars
-  const { email, password } = await req.json()
+  const { email, password, token } = await req.json()
+  let users = [];
+  let user = null;
 
-  const users = await getUserDataByEmail(email)
+  if (email) {
+    users = await getUserDataByEmail(email)
+    user = users.find(u => u.email === email)
+  } else if (token) {
+    console.log('using token')
+    console.log(token)
+    
+    // switch any kind decode or decrypt method for token in future
+    const plain_token = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+    
+    users = await getUserDataByEmail(plain_token.email)
+    user = users.find(u => u.email === plain_token.email)
+  }
+
   
-  // const user = users.find(u => u.email === email && u.password === password)
-  // this will switch back when LOGIN Table has data
-  const user = users.find(u => u.email === email)
+  
   let response = null
 
   if (user) {

@@ -22,7 +22,9 @@ export const authOptions = {
        * As we are using our own Sign-in page, we do not need to change
        * username or password attributes manually in following credentials object.
        */
-      credentials: {},
+      credentials: {
+        token: { label: "Token", type: "password" },
+      },
       async authorize(credentials) {
         /*
          * You need to provide your own logic here that takes the credentials submitted and returns either
@@ -30,7 +32,7 @@ export const authOptions = {
          * For e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
          * You can also use the `req` object to obtain additional parameters (i.e., the request IP address)
          */
-        const { email, password } = credentials
+        const { email, password, token } = credentials
 
         try {
           // ** Login API Call to match the user credentials and receive user data in response along with his role
@@ -39,7 +41,7 @@ export const authOptions = {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password, token })
           })
 
           const data = await res.json()

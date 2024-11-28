@@ -6,9 +6,10 @@ import sendPromptToChatGPT from './openapi'
 import {getUserDataById, getBMIByUserId, getAllergyById, getVitalSignsByUserId, getPrescriptionByUserId, getAdministeredByUserId} from '@/app/server/action'
 
 export async function GET(request) {
-  console.log(request);
+  // console.log(request);
   const searchParams = request.nextUrl.searchParams
-  console.log(searchParams)
+
+  // console.log(searchParams)
   const id = searchParams.get('userId')
 
   const promptData = {
@@ -21,7 +22,7 @@ export async function GET(request) {
   }
 
   const result = await sendPromptToChatGPT(`
-give me  health summary using this structutre Prompt in HTML Format:
+give me  health summary using this structutre Prompt in HTML Format and table,th,td use the border property with border: 1px solid:
 Generate a detailed patient health summary in the following structured format:
   (title) Personal Information
 Field Details

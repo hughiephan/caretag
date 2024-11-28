@@ -37,13 +37,15 @@ const AboutOverview = ({ user }) => {
   
   const handleSave = async () => {
     if (status != "authenticated") {
-      console.log('missing user id to update bmi')
+      console.log('missing user id to update')
+
       return;
     }
 
     candidate.user_id = session.user.id;
 
     console.log(candidate)
+
     const response = await axios.put(`/api/pages/profile`,candidate);
     
     if (response.status != 200) {
@@ -93,8 +95,8 @@ const AboutOverview = ({ user }) => {
                     <Typography> 
                       {
                       user[0].first_name.charAt(0).toUpperCase() + user[0].first_name.slice(1) + ' ' +
-                      user[0].middle_names.charAt(0).toUpperCase()  + user[0].middle_names.slice(1) + ' ' +
-                      user[0].last_name.charAt(0).toUpperCase() + user[0].last_name.slice(1)
+                      (user[0].middle_names ? user[0].middle_names?.charAt(0).toUpperCase()  + user[0].middle_names?.slice(1) + ' ': '')
+                      + user[0].last_name.charAt(0).toUpperCase() + user[0].last_name.slice(1)
                       }
                     </Typography>
                   </div>
