@@ -2,12 +2,15 @@
 import { useState } from 'react'
 
 // MUI Imports
-import List from '@mui/material/List'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import ListItem from '@mui/material/ListItem'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
+import {
+  List,
+  Avatar,
+  Button,
+  ListItem,
+  IconButton,
+  Typography
+} from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton';
 
 // Third-party Imports
 import { toast } from 'react-toastify'
@@ -39,14 +42,15 @@ const FileUploaderRestrictions = () => {
       // debug
       // console.log("onDrop")
       // console.log(acceptedFiles)
-      
+
       acceptedFiles.forEach((file) => {
         const reader = new FileReader()
-  
+
         reader.onabort = () => console.log('file reading was aborted')
         reader.onerror = () => console.log('file reading has failed')
         reader.onload = () => {
           const binaryStr = reader.result
+
           console.log(binaryStr)
 
           // Create an object with file details and ArrayBuffer
@@ -87,6 +91,7 @@ const FileUploaderRestrictions = () => {
     const uploadedFiles = files
     const filtered = uploadedFiles.filter(i => i.name !== file.name)
     const filteredFileOnloadList = fileOnloadList.filter(i => i.name !== file.name)
+
     setFiles([...filtered])
     setFileOnloadList(filteredFileOnloadList)
   }
@@ -112,8 +117,10 @@ const FileUploaderRestrictions = () => {
     try {
       // upload file to cloud storage
       let response = await axios.post(`/api/pages/document`, {files: fileOnloadList, userId: session.user.id});
+
       if (response) {
         alert("Files are uploaded!");
+
         // Force refresh the page
         window.location.reload()
       }
@@ -121,7 +128,7 @@ const FileUploaderRestrictions = () => {
       console.error(`Error uploading ${error}`)
     }
 
-    
+
     setUploading(false)
     handleRemoveAllFiles()
   }
@@ -164,12 +171,22 @@ const FileUploaderRestrictions = () => {
         <>
           <List>{fileList}</List>
           <div className='buttons'>
-            <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
+            <Button sx={{ mb: 3}} color='error' variant='outlined' onClick={handleRemoveAllFiles}>
               Remove All
             </Button>
-            <Button variant='contained' onClick={handleUploadAllFiles}>
-              {uploading ? 'Uploading...' : 'Upload Files'}
-            </Button>
+            {/*<Button variant='contained' onClick={handleUploadAllFiles}>*/}
+            {/*  {uploading ? 'Uploading...' : 'Upload Files'}*/}
+            {/*</Button>*/}
+            <LoadingButton
+              onClick={handleUploadAllFiles}
+              endIcon={<i className='ri-upload-cloud-2-line'></i>}
+              loading={uploading}
+              loadingPosition='end'
+              variant='contained'
+              sx={{ ml: 5, mb: 3}}
+            >
+              Upload
+            </LoadingButton>
           </div>
         </>
       ) : null}

@@ -9,7 +9,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton';
 
 // Third-party Imports
 import { useSession } from 'next-auth/react'
@@ -21,14 +21,14 @@ const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(
 // insert date format
 const formatDate = (date) => {
     const pad = (num) => String(num).padStart(2, '0');
-  
+
     const year = date.getFullYear();
     const month = pad(date.getMonth() + 1); // Months are zero-based
     const day = pad(date.getDate());
     const hours = pad(date.getHours());
     const minutes = pad(date.getMinutes());
     const seconds = pad(date.getSeconds());
-  
+
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
@@ -36,18 +36,22 @@ const BMIForm = ({ BMIResponseData }) => {
     const { data: session, status } = useSession()
     const [attributes, setAttributes] = useState(JSON.parse(JSON.stringify(BMIResponseData[0])))
     const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));
-    console.log(attributes);
+    const [loading, setLoading] = useState(false);
+
     const handleAdd = async () => {
         if (status != "authenticated") {
             console.log('missing user id to update bmi')
+
             return;
         }
 
+        setLoading(true);
+
         candidate.user_id = session.user.id;
         candidate.date = formatDate(new Date());
-        console.log(candidate)
+
         const response = await axios.post(`/api/pages/profile/bmi`, candidate);
-        
+
         if (response.status != 200) {
             alert(`Can't update user information, please contact administrator.`);
         }
@@ -59,7 +63,7 @@ const BMIForm = ({ BMIResponseData }) => {
     };
 
     return (
-        <>  
+        <>
         <Card>
             <CardHeader title='BMI History' subheader='' />
             <CardContent>
@@ -96,8 +100,16 @@ const BMIForm = ({ BMIResponseData }) => {
                 defaultValue={formattedDate(new Date(attributes.date))}
                 variant="filled"
                 />
-                <Button onClick={handleAdd}>Add</Button>
-                {/* <Button onClick={()=>{}}>Cancel</Button> */}
+                <LoadingButton
+                  onClick={handleAdd}
+                  endIcon={<i className='ri-sticky-note-add-fill'></i>}
+                  loading={loading}
+                  loadingPosition='end'
+                  variant='contained'
+                  sx={{ mt: 5, mb: 3 }}
+                >
+                  Add
+                </LoadingButton>
             </Box>
             </CardContent>
         </Card>

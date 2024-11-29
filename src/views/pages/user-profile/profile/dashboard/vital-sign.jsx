@@ -49,7 +49,7 @@ const style = {
 // Format the date into 'MM/DD/YYYY HH:mm:ss'
 const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`};
 
-// insert date format YYYY-MM-dd
+// insert date format YYYY-MM-dd HH:mm:ss
 const formatDate = (date) => {
   const pad = (num) => String(num).padStart(2, '0');
 
@@ -105,6 +105,7 @@ const VitalSign = ({ VitalSignResponseData }) => {
     candidate.user_id = session.user.id;
     candidate.date_taken = formatDate(new Date(candidate.date_taken));
     const response = await axios.put(`/api/pages/profile/vitalsign`, candidate);
+
     if (response.status != 200) {
       alert(`Can't update user information, please contact administrator.`);
     }
@@ -123,9 +124,18 @@ const VitalSign = ({ VitalSignResponseData }) => {
     setOpen(true);
   }
 
-  const handleDelete = row => {
+  const handleDelete = async row => {
     if (window.confirm(`Are you sure you want to delete?`)) {
       // send DELETE request to modify DB
+      console.log(row)
+
+      row.date_taken = formatDate(new Date(row.date_taken))
+      const response = await axios.delete(`/api/pages/profile/vitalsign`, {data: row});
+
+      if (response.status != 200) {
+        alert(`Can't delete user information, please contact administrator.`);
+      }
+
       setData(prev => prev.filter(item => item.date_taken !== row.date_taken))
     }
   }

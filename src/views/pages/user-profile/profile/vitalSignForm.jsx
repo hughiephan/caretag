@@ -9,7 +9,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton';
 
 // Third-party Imports
 import { useSession } from 'next-auth/react'
@@ -21,14 +21,14 @@ const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(
 // insert date format
 const formatDate = (date) => {
     const pad = (num) => String(num).padStart(2, '0');
-  
+
     const year = date.getFullYear();
     const month = pad(date.getMonth() + 1); // Months are zero-based
     const day = pad(date.getDate());
     const hours = pad(date.getHours());
     const minutes = pad(date.getMinutes());
     const seconds = pad(date.getSeconds());
-  
+
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
@@ -36,90 +36,103 @@ const VitalSignForm = ({ VitalSignResponseData }) => {
     const { data: session, status } = useSession()
     const [attributes, setAttributes] = useState(JSON.parse(JSON.stringify(VitalSignResponseData[0])))
     const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));
-    
+    const [loading, setLoading] = useState(false);
+
     const handleAdd = async () => {
-        if (status != "authenticated") {
+        if (status !== "authenticated") {
             console.log('missing user id to update bmi')
+
             return;
         }
+
+        setLoading(true);
 
         candidate.user_id = session.user.id;
         candidate.date_taken = formatDate(new Date());
 
         console.log(candidate)
         const response = await axios.post(`/api/pages/profile/vitalsign`, candidate);
-        
+
         if (response.status != 200) {
             alert(`Can't update user information, please contact administrator.`);
         }
 
         setAttributes(candidate);
-        
+
         // Force refresh the page
         window.location.reload();
     };
 
     return (
-        <>  
+      <>
         <Card>
-            <CardHeader title='Vital sign History' subheader='' />
-            <CardContent>
+          <CardHeader title='Vital sign History' subheader='' />
+          <CardContent>
             <Box>
-                <TextField
+              <TextField
                 fullWidth
-                label="Taken By"
-                id="filled-hidden-label-small"
+                label='Taken By'
+                id='filled-hidden-label-small'
                 defaultValue={attributes.taken_by}
-                onChange={event => candidate.taken_by = event.target.value}
-                variant="filled"
-                />
-                <TextField
+                onChange={event => (candidate.taken_by = event.target.value)}
+                variant='filled'
+              />
+              <TextField
                 fullWidth
-                label="Temperature"
-                id="filled-hidden-label-small"
+                label='Temperature'
+                id='filled-hidden-label-small'
                 defaultValue={attributes.temperature}
-                onChange={event => candidate.temperature = event.target.value}
-                variant="filled"
-                />
-                <TextField
+                onChange={event => (candidate.temperature = event.target.value)}
+                variant='filled'
+              />
+              <TextField
                 fullWidth
-                label="Heart Rate"
-                id="filled-hidden-label-small"
+                label='Heart Rate'
+                id='filled-hidden-label-small'
                 defaultValue={attributes.heart_rate}
-                onChange={event => candidate.heart_rate = event.target.value}
-                variant="filled"
-                />
-                <TextField
+                onChange={event => (candidate.heart_rate = event.target.value)}
+                variant='filled'
+              />
+              <TextField
                 fullWidth
-                label="Blood Pressure"
-                id="filled-hidden-label-small"
+                label='Blood Pressure'
+                id='filled-hidden-label-small'
                 defaultValue={attributes.blood_pressure}
-                onChange={event => candidate.blood_pressure = event.target.value}
-                variant="filled"
-                />
-                <TextField
+                onChange={event => (candidate.blood_pressure = event.target.value)}
+                variant='filled'
+              />
+              <TextField
                 fullWidth
-                label="Glucose Levels"
-                id="filled-hidden-label-small"
+                label='Glucose Levels'
+                id='filled-hidden-label-small'
                 defaultValue={attributes.glucose_levels}
-                onChange={event => candidate.glucose_levels = event.target.value}
-                variant="filled"
-                />
-                <TextField
+                onChange={event => (candidate.glucose_levels = event.target.value)}
+                variant='filled'
+              />
+              <TextField
                 fullWidth
                 disabled
-                label="Date take"
-                id="filled-hidden-label-small"
+                label='Last time taken date'
+                id='filled-hidden-label-small'
                 defaultValue={formattedDate(new Date(attributes.date_taken))}
-                variant="filled"
-                />
-                <Button onClick={handleAdd}>Add</Button>
-                {/* <Button onClick={()=>{}}>Cancel</Button> */}
+                variant='filled'
+              />
+              <LoadingButton
+                onClick={handleAdd}
+                endIcon={<i className='ri-sticky-note-add-fill'></i>}
+                loading={loading}
+                loadingPosition='end'
+                variant='contained'
+                sx={{ mt: 5, mb: 3 }}
+              >
+                Add
+              </LoadingButton>
+              {/* <Button onClick={()=>{}}>Cancel</Button> */}
             </Box>
-            </CardContent>
+          </CardContent>
         </Card>
-        </>
-    );
+      </>
+    )
 }
 
 export default VitalSignForm

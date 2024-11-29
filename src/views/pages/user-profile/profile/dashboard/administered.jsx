@@ -6,8 +6,8 @@ import { useState, useMemo } from 'react'
 // MUI Imports
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
-import Checkbox from '@mui/material/Checkbox' 
-import Button from '@mui/material/Button' 
+import Checkbox from '@mui/material/Checkbox'
+import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import TablePagination from '@mui/material/TablePagination'
 import Modal from '@mui/material/Modal'
@@ -106,18 +106,22 @@ const AdministeredTable = ({ administered }) => {
   const { data: session, status } = useSession()
   const [attributes, setAttributes] = useState(administeredParams)
   const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));
+
   // Row Action
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleEdit = row => { setAttributes(row); setCandidate(row); setOpen(true) }
+
   const handleDelete = async row => {
     if (window.confirm(`Are you sure you want to delete?`)) {
       // send DELETE request to modify DB
-      setCandidate(row);
-      const response = await axios.delete(`/api/pages/profile/administered?id=${candidate.administered_id}`);
+
+      const response = await axios.delete(`/api/pages/profile/administered?id=${row.administered_id}`);
+
       if (response.status != 200) {
         alert(`Can't delete user information, please contact administrator.`);
       }
+
       setData(prev => prev.filter(item => item.end_date !== row.end_date && item.date_administered !== row.date_administered))
     }
   }
@@ -132,6 +136,7 @@ const AdministeredTable = ({ administered }) => {
     console.log(candidate)
 
     const response = await axios.put(`/api/pages/profile/administered`, candidate);
+
     if (response.status != 200) {
       alert(`Can't update user information, please contact administrator.`);
     }
@@ -152,12 +157,14 @@ const AdministeredTable = ({ administered }) => {
 
     if (Object.values(candidate).includes('')) {
       alert('Please fill out all the blanks!');
+
       return;
     }
 
     console.log(candidate)
 
     const response = await axios.post(`/api/pages/profile/administered`, candidate);
+
     if (response.status != 200) {
       alert(`Can't update user information, please contact administrator.`);
     }
@@ -203,7 +210,7 @@ const AdministeredTable = ({ administered }) => {
       columnHelper.accessor('modify', {
         id: 'modify',
         header: 'Modification',
-        cell: ({ row }) => 
+        cell: ({ row }) =>
         <>
           <Typography align='center'>
           <IconButton size='small' onClick={() => handleEdit(row.original)}>

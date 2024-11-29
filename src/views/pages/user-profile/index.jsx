@@ -26,7 +26,7 @@ const UserProfile = ({ tabContentList, data }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <UserProfileHeader data={data?.profileHeader} />
+        <UserProfileHeader data={'/images/avatars/1.png'} />
       </Grid>
       {activeTab === undefined ? null : (
         <Grid item xs={12} className='flex flex-col gap-6'>

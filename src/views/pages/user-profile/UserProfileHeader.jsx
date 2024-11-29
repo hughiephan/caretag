@@ -8,10 +8,10 @@ import Button from '@mui/material/Button'
 const UserProfileHeader = ({ data }) => {
   return (
     <Card>
-      <CardMedia image={data?.coverImg} className='bs-[250px]' />
+      <CardMedia image={'/images/pages/profile-banner.png'} className='bs-[250px]' />
       <CardContent className='flex justify-center flex-col items-center gap-6 md:items-end md:flex-row !pt-0 md:justify-start'>
         <div className='flex rounded-bs-xl mbs-[-30px] mli-[-5px] border-[5px] border-be-0 border-backgroundPaper bg-backgroundPaper'>
-          <img height={120} width={120} src={data?.profileImg} className='rounded' alt='Profile Background' />
+          <img height={120} width={120} src={'/images/avatars/1.png'} className='rounded' alt='Profile Background' />
         </div>
         {/* <div className='flex is-full flex-wrap justify-start flex-col items-center sm:flex-row sm:justify-between sm:items-end gap-5'>
           <div className='flex flex-col items-center sm:items-start gap-2'>
