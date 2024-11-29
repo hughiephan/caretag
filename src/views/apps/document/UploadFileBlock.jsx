@@ -2,12 +2,15 @@
 import { useState } from 'react'
 
 // MUI Imports
-import List from '@mui/material/List'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import ListItem from '@mui/material/ListItem'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
+import {
+  List,
+  Avatar,
+  Button,
+  ListItem,
+  IconButton,
+  Typography
+} from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton';
 
 // Third-party Imports
 import { toast } from 'react-toastify'
@@ -168,12 +171,22 @@ const FileUploaderRestrictions = () => {
         <>
           <List>{fileList}</List>
           <div className='buttons'>
-            <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
+            <Button sx={{ mb: 3}} color='error' variant='outlined' onClick={handleRemoveAllFiles}>
               Remove All
             </Button>
-            <Button variant='contained' onClick={handleUploadAllFiles}>
-              {uploading ? 'Uploading...' : 'Upload Files'}
-            </Button>
+            {/*<Button variant='contained' onClick={handleUploadAllFiles}>*/}
+            {/*  {uploading ? 'Uploading...' : 'Upload Files'}*/}
+            {/*</Button>*/}
+            <LoadingButton
+              onClick={handleUploadAllFiles}
+              endIcon={<i className='ri-upload-cloud-2-line'></i>}
+              loading={uploading}
+              loadingPosition='end'
+              variant='contained'
+              sx={{ ml: 5, mb: 3}}
+            >
+              Upload
+            </LoadingButton>
           </div>
         </>
       ) : null}

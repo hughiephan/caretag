@@ -3,14 +3,14 @@
 // React Imports
 import { useState, useMemo } from 'react'
 
-// Next Imports 
+// Next Imports
 import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
-import Checkbox from '@mui/material/Checkbox' 
-import Button from '@mui/material/Button' 
+import Checkbox from '@mui/material/Checkbox'
+import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import TablePagination from '@mui/material/TablePagination'
 import Modal from '@mui/material/Modal'
@@ -106,7 +106,7 @@ const AllergyTable = ({ allergies, userId }) => {
 
     if (status != "authenticated") {
       console.log('missing user id to update bmi')
-      
+
       return;
     }
 
@@ -131,17 +131,17 @@ const AllergyTable = ({ allergies, userId }) => {
     // Force refresh the page
     window.location.reload();
   };
-  
+
   const [data, setData] = useState(...[allergies])
   const [attributes, setAttributes] = useState(allergyParams)
-  const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));  
+  const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));
 
   const handleEdit = row => {
     setAttributes(row);
     setCandidate(row);
     setOpen(true);
   }
-  
+
   const handleDelete = row => {
     if (window.confirm(`Are you sure you want to delete ${row.allergy_name}?`)) {
       // send DELETE request to modify DB
@@ -176,7 +176,7 @@ const AllergyTable = ({ allergies, userId }) => {
       columnHelper.accessor('modify', {
         id: 'modify',
         header: 'Modification',
-        cell: ({ row }) => 
+        cell: ({ row }) =>
         <>
           <Typography align='center'>
           <IconButton size='small' onClick={() => handleEdit(row.original)}>
@@ -383,20 +383,6 @@ const AllergyTable = ({ allergies, userId }) => {
             <MenuItem value={37}>Yeast Allergy</MenuItem>
             <MenuItem value={38}>Pepper Allergy</MenuItem>
           </Select>
-          <InputLabel id="category-select-label">Category</InputLabel>
-          <Select
-            fullWidth
-            labelId="category-select-label"
-            id="category-select"
-            value={4}
-            onChange={event => candidate.category_id = event.target.value}
-            label="Category"
-          >
-            <MenuItem value={1}>Food</MenuItem>
-            <MenuItem value={2}>Environment</MenuItem>
-            <MenuItem value={3}>Medication</MenuItem>
-            <MenuItem value={4}>Other</MenuItem>
-          </Select>
           <TextField
             fullWidth
             label="Symptoms"
@@ -436,7 +422,7 @@ const AllergyTable = ({ allergies, userId }) => {
             onChange={event => candidate.notes = event.target.value}
             variant="filled"
             size="small"
-          />            
+          />
           </div>
           <Button onClick={handleSave}>Save</Button>
           <Button onClick={handleClose}>Cancel</Button>

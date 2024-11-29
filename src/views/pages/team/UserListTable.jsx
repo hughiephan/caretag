@@ -4,17 +4,20 @@
 import { useEffect, useState, useMemo } from 'react'
 
 // MUI Imports
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import Divider from '@mui/material/Divider'
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
-import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
+import {
+  Card,
+  CardHeader,
+  Divider,
+  Button,
+  TextField,
+  Typography,
+  Checkbox,
+  IconButton,
+  TablePagination,
+  Tooltip
+} from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton';
 import { styled } from '@mui/material/styles'
-import TablePagination from '@mui/material/TablePagination'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -121,7 +124,7 @@ const UserListTable = () => {
               <Typography color='text.primary' className='font-medium'>
                 {
                  row.original.first_name.charAt(0).toUpperCase() +row.original.first_name.slice(1) + ' ' +
-                 (row.original.middle_names ? row.original.middle_names.charAt(0).toUpperCase()  +row.original.middle_names?.slice(1) + ' ' : '') + 
+                 (row.original.middle_names ? row.original.middle_names.charAt(0).toUpperCase()  +row.original.middle_names?.slice(1) + ' ' : '') +
                  row.original.last_name.charAt(0).toUpperCase() +row.original.last_name.slice(1)
                 }
               </Typography>
@@ -159,6 +162,7 @@ const UserListTable = () => {
           <div className='flex items-center gap-0.5'>
             <IconButton size='small' onClick={async () => {
               const res = await axios.delete('/api/pages/contact', {data: {user_id:session.user.id, email:row.original.email}})
+
               console.log(await res)
               setData(data?.filter(user => user.email !== row.original.email));
             }}>
@@ -178,10 +182,11 @@ const UserListTable = () => {
 
   const getContacts = async (id) => {
     const response = await axios.get(`/api/pages/contact?userId=${id}`);
-    
+
     if (response.status != 200) {
       alert(`Can't get user contacts, please contact administrator.`);
     }
+
     console.log(await response);
     const json = await response.data;
 
@@ -224,6 +229,24 @@ const UserListTable = () => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
+  // For Generate Token
+  const [loading, setLoading] = useState(1);
+
+  const generateToken = async () => {
+    setLoading(2);
+    const response = await axios.get(`/api/token`);
+
+    console.log(await response.data);
+
+    await navigator.clipboard.writeText(await response.data.data);
+
+    if (response) {
+      setLoading(3);
+      setTimeout(() => {
+        setLoading(1);
+      }, 3000);
+    }
+  }
 
   return (
     <>
@@ -242,6 +265,30 @@ const UserListTable = () => {
             <Button variant='contained' onClick={() => setAddUserOpen(!addUserOpen)} className='max-sm:is-full'>
               Add New Contact
             </Button>
+            <Tooltip
+              onClose={loading!==3}
+              open={loading===3}
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              title="Copyed to clipboard"
+              arrow
+              slotProps={{
+                popper: {
+                  disablePortal: true,
+                },
+              }}
+            >
+              <LoadingButton
+                onClick={generateToken}
+                endIcon={<i className='ri-key-2-fill'></i>}
+                loading={loading===2}
+                loadingPosition='end'
+                variant='text'
+              >
+                Generate Token
+              </LoadingButton>
+            </Tooltip>
           </div>
         </div>
         <div className='overflow-x-auto'>

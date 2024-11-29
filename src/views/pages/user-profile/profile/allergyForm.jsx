@@ -9,10 +9,10 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button'
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 // Third-party Imports
 import { useSession } from 'next-auth/react'
@@ -24,31 +24,31 @@ const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(
 // insert date format
 const formatDate = (date) => {
     const pad = (num) => String(num).padStart(2, '0');
-  
+
     const year = date.getFullYear();
     const month = pad(date.getMonth() + 1); // Months are zero-based
     const day = pad(date.getDate());
     const hours = pad(date.getHours());
     const minutes = pad(date.getMinutes());
     const seconds = pad(date.getSeconds());
-  
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    return `${year}-${month}-${day}`;
 }
 
 const AllergyForm = ({ allergies }) => {
     const { data: session, status } = useSession()
     const [attributes, setAttributes] = useState(JSON.parse(JSON.stringify(allergies[0])))
     const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)));
-    
-    const handleAdd = async () => {
-        const res = await axios.get(`/api/pages/profile/allergy`);
-        const allergyList = res.data;
+    const [loading, setLoading] = useState(false);
 
+    const handleAdd = async () => {
         if (status != "authenticated") {
             console.log('missing user id to update bmi')
 
             return;
         }
+
+        setLoading(true);
 
         candidate.user_id = session.user.id;
         candidate.date_diagnosed = formatDate(new Date());
@@ -59,19 +59,19 @@ const AllergyForm = ({ allergies }) => {
         delete candidate.severity_name
         console.log(candidate)
         const response = await axios.post(`/api/pages/profile/allergy`, candidate);
-        
-        if (response.status != 200) {
+
+        if (response.status !== 200) {
             alert(`Can't update user information, please contact administrator.`);
         }
 
         setAttributes(candidate);
-        
+
         // Force refresh the page
         window.location.reload();
     };
 
     return (
-        <>  
+        <>
         <Card>
             <CardHeader title='Allergy History' subheader='' />
             <CardContent>
@@ -124,20 +124,6 @@ const AllergyForm = ({ allergies }) => {
                 <MenuItem value={37}>Yeast Allergy</MenuItem>
                 <MenuItem value={38}>Pepper Allergy</MenuItem>
             </Select>
-            <InputLabel id="category-select-label">Category</InputLabel>
-            <Select
-                fullWidth
-                labelId="category-select-label"
-                id="category-select"
-                value={4}
-                onChange={event => candidate.category_id = event.target.value}
-                label="Category"
-            >
-                <MenuItem value={1}>Food</MenuItem>
-                <MenuItem value={2}>Environment</MenuItem>
-                <MenuItem value={3}>Medication</MenuItem>
-                <MenuItem value={4}>Other</MenuItem>
-            </Select>
             <TextField
                 fullWidth
                 label="Symptoms"
@@ -177,9 +163,17 @@ const AllergyForm = ({ allergies }) => {
                 onChange={event => candidate.notes = event.target.value}
                 variant="filled"
                 size="small"
-            /> 
-                <Button onClick={handleAdd}>Add</Button>
-                {/* <Button onClick={()=>{}}>Cancel</Button> */}
+            />
+            <LoadingButton
+              onClick={handleAdd}
+              endIcon={<i className='ri-sticky-note-add-fill'></i>}
+              loading={loading}
+              loadingPosition='end'
+              variant='contained'
+              sx={{ mt: 5, mb: 3 }}
+            >
+              Add
+            </LoadingButton>
             </Box>
             </CardContent>
         </Card>

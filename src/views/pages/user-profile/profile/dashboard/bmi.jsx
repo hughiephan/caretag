@@ -18,7 +18,7 @@ const formattedDate = (date) => {return `${String(date.getMonth() + 1).padStart(
 const BMI = ({ BMIResponseData }) => {
   // Hooks
   const theme = useTheme()
-  
+
   const dates = []
   const series = []
 
@@ -86,13 +86,6 @@ const BMI = ({ BMIResponseData }) => {
     },
     colors: ['var(--mui-palette-warning-main)', 'var(--mui-palette-primary-main)'],
     fill: { opacity: [1, 1] },
-    plotOptions: {
-      bar: {
-        columnWidth: '30%',
-        borderRadius: 4,
-        borderRadiusApplication: 'end'
-      }
-    },
     dataLabels: { enabled: false },
     xaxis: {
       tickAmount: 10,
@@ -104,12 +97,17 @@ const BMI = ({ BMIResponseData }) => {
           fontWeight: 400
         }
       },
-      axisBorder: { show: false },
+      axisBorder: {
+        show: true,
+        color: 'var(--mui-palette-divider)',
+        height: 1
+      },
       axisTicks: { show: false }
     },
     yaxis: {
-      tickAmount: 5,
+      tickAmount: 4,
       labels: {
+        formatter: (value) => value.toFixed(2),
         style: {
           colors: 'var(--mui-palette-text-disabled)',
           fontSize: '13px',

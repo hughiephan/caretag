@@ -18,7 +18,7 @@ const HorizontalLayout = props => {
   const { header, footer, children } = props
 
   return (
-    <div className={classnames(horizontalLayoutClasses.root, 'flex flex-auto')} style={{backgroundColor:'lightpink', backgroundImage: `url(${'/image/pages/backgroundV2.png'})`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover'}}>
+    <div className={classnames(horizontalLayoutClasses.root, 'flex flex-auto')} style={{backgroundColor:'azure'}}>
       <HorizontalNavProvider>
         <StyledContentWrapper className={classnames(horizontalLayoutClasses.contentWrapper, 'flex flex-col is-full')}>
           {header || null}

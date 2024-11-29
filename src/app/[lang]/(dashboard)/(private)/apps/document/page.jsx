@@ -16,7 +16,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
+import Icon from '@mui/material/Icon';
 
 import { useSession } from 'next-auth/react'
 
@@ -100,9 +100,15 @@ const DocumentApp = () => {
       return;
     }
 
+    if (checked.length === 0) {
+      alert("No file is selected!");
+
+      return;
+    }
+
     const response = await axios.delete(`/api/pages/document`, {data: {userId: session.user.id, files: checked}});
-    
-    if (response.status != 200) {
+
+    if (response.status !== 200) {
       alert(`Fail to delete files`);
     } else {
       // Force refresh the page
@@ -121,14 +127,14 @@ const DocumentApp = () => {
 
   return (
     <>
-      <p>Your uploaded files : </p>
+      <Typography fontSize={20}>Your uploaded files : </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <List dense={true} className='overflow-visible' sx={{ width: '100%', maxWidth: 700, bgcolor: 'background.paper' }}>
             {
               <>
               {doFetch ? <CircularProgress /> : null }
-              {files ? Array.from(files).map((fileName) => {
+              {files.length !== 0 ? Array.from(files).map((fileName) => {
                 const labelId = `checkbox-list-label-${fileName}`;
 
                 return (
@@ -148,20 +154,22 @@ const DocumentApp = () => {
                         />
                       </ListItemIcon>
                       <ListItemIcon onClick={()=>{downloadFile(fileName)}}>
-                        <i class="ri-file-check-line"></i>
+                        <i className="ri-file-check-line"></i>
                       </ListItemIcon>
                       <ListItemText id={labelId} primary={`${fileName}`} onClick={()=>{downloadFile(fileName)}} />
                     </ListItemButton>
                   </ListItem>
                 );
-              }) : <Typography>No files have been uploaded.</Typography>}
+              }) : <Typography sx={{ ml: 5 }}>No files have been uploaded.</Typography>}
               </>
             }
           </List>
-          <Button sx={{backgroundColor: 'red', mt: 5, ml: 3}} onClick={deleteFiles}>
-            <IconButton aria-label="delete" className='ri-delete-bin-2-line'/>
-            <Typography>Delete</Typography>
-          </Button>
+          {files.length !== 0 ?
+            <Button variant='outlined' color='error' sx={{mt: 5, ml: 3}} onClick={deleteFiles}>
+              <Icon aria-label="delete" className='ri-delete-bin-7-fill'/>
+              <Typography sx={{ml: 3}}>Delete</Typography>
+            </Button>
+          : null}
         </Grid>
       </Grid>
       <Card className='overflow-visible' sx={{ my: themeConfig.layoutPadding }}>
