@@ -167,7 +167,7 @@ const DocumentApp = () => {
           {files.length !== 0 ?
             <Button variant='outlined' color='error' sx={{mt: 5, ml: 3}} onClick={deleteFiles}>
               <Icon aria-label="delete" className='ri-delete-bin-7-fill'/>
-              <Typography sx={{ml: 3}}>Delete</Typography>
+              <Typography sx={{ml: 3}} color='red' >Delete</Typography>
             </Button>
           : null}
         </Grid>

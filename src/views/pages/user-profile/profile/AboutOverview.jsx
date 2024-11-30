@@ -2,17 +2,21 @@
 import { useState } from 'react'
 
 // MUI Imports
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
-import Button from '@mui/material/Button'
-import Modal from '@mui/material/Modal'
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { 
+  Grid,
+  Card, 
+  Typography, 
+  CardContent, 
+  Button, 
+  Modal, 
+  Box, 
+  TextField, 
+  InputLabel, 
+  Select, 
+  MenuItem, 
+  Tooltip
+} from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton';
 
 // Third-party Imports
 import { useSession } from 'next-auth/react'
@@ -45,9 +49,27 @@ const formatDate = (date) => {
 }
 
 const AboutOverview = ({ user }) => {
+  const [loading, setLoading] = useState(1); // For Generate Token
   const [open, setOpen] = useState(false);
-
   const { data: session, status } = useSession()
+  const [attributes, setAttributes] = useState(user[0])
+  const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)))
+
+  const generateToken = async () => {
+    setLoading(2);
+    const response = await axios.get(`/api/token`);
+
+    console.log(await response.data);
+
+    await navigator.clipboard.writeText(await response.data.data);
+
+    if (response) {
+      setLoading(3);
+      setTimeout(() => {
+        setLoading(1);
+      }, 3000);
+    }
+  }
   
   const handleSave = async () => {
     if (status != "authenticated") {
@@ -81,9 +103,6 @@ const AboutOverview = ({ user }) => {
     setCandidate(JSON.parse(JSON.stringify(attributes)))
     setOpen(false);
   };
-
-  const [attributes, setAttributes] = useState(user[0])
-  const [candidate, setCandidate] = useState(JSON.parse(JSON.stringify(attributes)))
 
   const handleEdit = user => {
     setAttributes(user[0]);
@@ -170,9 +189,41 @@ const AboutOverview = ({ user }) => {
                     <Typography> {user[0].email} </Typography>
                   </div>
                 </div>
-                <Button  size='small' onClick={() => handleEdit(user)}>
-                  <i className='ri-edit-box-line text-textSecondary' />
-                </Button >
+                <Grid>
+                  <Button 
+                    fullWidth
+                    onClick={() => handleEdit(user)}
+                    color='secondary'
+                  >
+                    <i className='ri-edit-box-line text-textSecondary' />
+                    Edit
+                  </Button >
+                  <Tooltip
+                    onClose={loading!==3}
+                    open={loading===3}
+                    disableFocusListener
+                    disableHoverListener
+                    disableTouchListener
+                    title="Copyed to clipboard"
+                    arrow
+                    slotProps={{
+                      popper: {
+                        disablePortal: true,
+                      },
+                    }}
+                  >
+                    <LoadingButton
+                      fullWidth
+                      onClick={generateToken}
+                      endIcon={<i className='ri-key-2-fill'></i>}
+                      loading={loading===2}
+                      loadingPosition='end'
+                      variant='text'
+                    >
+                      Generate Token
+                    </LoadingButton>
+                  </Tooltip>
+                </Grid>
               </>
               : null}
             </div>

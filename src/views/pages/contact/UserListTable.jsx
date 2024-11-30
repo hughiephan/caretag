@@ -13,10 +13,8 @@ import {
   Typography,
   Checkbox,
   IconButton,
-  TablePagination,
-  Tooltip
+  TablePagination
 } from '@mui/material'
-import LoadingButton from '@mui/lab/LoadingButton';
 import { styled } from '@mui/material/styles'
 
 // Third-party Imports
@@ -229,25 +227,6 @@ const UserListTable = () => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  // For Generate Token
-  const [loading, setLoading] = useState(1);
-
-  const generateToken = async () => {
-    setLoading(2);
-    const response = await axios.get(`/api/token`);
-
-    console.log(await response.data);
-
-    await navigator.clipboard.writeText(await response.data.data);
-
-    if (response) {
-      setLoading(3);
-      setTimeout(() => {
-        setLoading(1);
-      }, 3000);
-    }
-  }
-
   return (
     <>
       <Card>
@@ -265,30 +244,7 @@ const UserListTable = () => {
             <Button variant='contained' onClick={() => setAddUserOpen(!addUserOpen)} className='max-sm:is-full'>
               Add New Contact
             </Button>
-            <Tooltip
-              onClose={loading!==3}
-              open={loading===3}
-              disableFocusListener
-              disableHoverListener
-              disableTouchListener
-              title="Copyed to clipboard"
-              arrow
-              slotProps={{
-                popper: {
-                  disablePortal: true,
-                },
-              }}
-            >
-              <LoadingButton
-                onClick={generateToken}
-                endIcon={<i className='ri-key-2-fill'></i>}
-                loading={loading===2}
-                loadingPosition='end'
-                variant='text'
-              >
-                Generate Token
-              </LoadingButton>
-            </Tooltip>
+            
           </div>
         </div>
         <div className='overflow-x-auto'>

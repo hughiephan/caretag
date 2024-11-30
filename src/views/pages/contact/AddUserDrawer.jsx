@@ -31,6 +31,7 @@ const AddUserDrawer = props => {
     if (status === "authenticated") {
       candidate.user_id = session.user.id;
     }
+
     delete candidate.firstName
     delete candidate.lastname
     delete candidate.middleNames

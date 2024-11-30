@@ -142,10 +142,19 @@ const AllergyTable = ({ allergies, userId }) => {
     setOpen(true);
   }
 
-  const handleDelete = row => {
+  const handleDelete = async row => {
     if (window.confirm(`Are you sure you want to delete ${row.allergy_name}?`)) {
       // send DELETE request to modify DB
-      setData(prev => prev.filter(item => item.allergy_name !== row.allergy_name && item.date_diagnosed !== row.date_diagnosed))
+      console.log(row)
+
+      row.date_diagnosed = formatDate(new Date(row.date_diagnosed))
+      const response = await axios.delete(`/api/pages/profile/allergy`, {data: row});
+
+      if (response.status != 200) {
+        alert(`Can't delete user information, please contact administrator.`);
+      }
+
+      setData(prev => prev.filter(item => item.allergy_name !== row.allergy_name && formatDate(new Date(item.date_diagnosed)) !== formatDate(new Date(row.date_diagnosed))))
     }
   }
 

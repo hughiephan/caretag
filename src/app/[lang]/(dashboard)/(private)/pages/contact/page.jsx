@@ -1,5 +1,5 @@
 // Component Imports
-import UserList from '@views/pages/team'
+import UserList from '@views/pages/contact'
 
 const UserListApp = async () => {
   return <UserList />

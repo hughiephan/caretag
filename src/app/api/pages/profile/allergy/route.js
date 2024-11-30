@@ -1,7 +1,7 @@
 // Next Imports
 import { NextResponse } from 'next/server'
 
-import {addUsersAllergyByUserId, getAllergies, getSeverities, modifyUsersAllergyById} from '@/app/server/action'
+import {addUsersAllergyByUserId, getAllergies, modifyUsersAllergyById, deleteUsersAllergyById} from '@/app/server/action'
 
 
 export async function POST(request) {
@@ -39,6 +39,18 @@ export async function PUT(request) {
   const res = await modifyUsersAllergyById(body);
 
   console.log(res);
+
+  return NextResponse.json({status:200});
+}
+
+export async function DELETE(request) {
+  const body = await request.json()
+
+  console.log("body")
+  console.log(body)
+  const res = await deleteUsersAllergyById(body)
+
+  console.log(res)
 
   return NextResponse.json({status:200});
 }
