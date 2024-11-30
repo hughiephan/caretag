@@ -87,9 +87,14 @@ const HomePageWrapper = () => {
       <Grid item xs={isVisible ? 4 : false}></Grid>
     </Grid>
     <Grid container spacing={3}>
-      <Grid item xs={isVisible ? 3 : false}></Grid>
-      <Grid item xs={isVisible ? 7 : 12}>
-        <Typography sx={{ pt:5 }} className='font-medium' color='text.primary'>
+      <Grid item xs={isVisible ? 2 : false}></Grid>
+      <Grid item xs={isVisible ? 8 : 12}>
+        <Typography 
+          sx={{ pt:4 }} 
+          className='font-medium' 
+          color='black'
+          variant="p"
+          >
           <div dangerouslySetInnerHTML={{ __html: result.message }} />
         </Typography>
       </Grid>

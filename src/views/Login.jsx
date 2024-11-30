@@ -15,8 +15,6 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Divider from '@mui/material/Divider'
-import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 
@@ -81,38 +79,35 @@ const Login = ({ mode }) => {
     }
   })
 
-  const autoLogin = async (token)=> {
+  const autoLogin = async (token, redirect)=> {
     
     console.log('using token to signin')
 
-    const result = await signIn("credentials", {
-      token,
-      redirect: false,
-    });
+    const result = await signIn("credentials", { token, redirect: false });
 
     if (result?.error) {
       setError(result.error);
+      
+      return;
+    }
+
+    console.log('redirect')
+    console.log(redirect)
+
+    if (redirect) {
+      router.push(redirect);
     } else {
-      router.push("/pages/user-profile");
+      router.push("/");
     }
   }
 
   const token = searchParams.get('token');
+  const redirect = searchParams.get('redirect');
 
   if (token && doOnce) {
-    autoLogin(token);
+    autoLogin(token, redirect);
     setDoOnce(false);
   }
-
-  const authBackground = useImageVariant(mode, lightImg, darkImg)
-
-  const characterIllustration = useImageVariant(
-    mode,
-    lightIllustration,
-    darkIllustration,
-    borderedLightIllustration,
-    borderedDarkIllustration
-  )
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
@@ -148,8 +143,6 @@ const Login = ({ mode }) => {
   return (
     <div className='flex bs-full justify-center'>
       <div className={classnames( 'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden', { 'border-ie': settings.skin === 'bordered'  } )} >
-        {/* <div className='pli-6 max-lg:mbs-40 lg:mbe-24'>  <img src={characterIllustration} alt='character-illustration'   className='max-bs-[673px] max-is-full bs-auto' /> </div>
-        <img src={authBackground} className='absolute bottom-[4%] z-[-1] is-full max-md:hidden' /> */}
       </div>
       <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
         <div className='absolute block-start-5 sm:block-start-[38px] inline-start-6 sm:inline-start-[38px]'>
@@ -160,13 +153,6 @@ const Login = ({ mode }) => {
             <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}!👋🏻`}</Typography>
             <Typography>Please sign-in that would be pretty cool</Typography>
           </div>
-          {/* <Alert icon={false} className='bg-[var(--mui-palette-primary-lightOpacity)]'> */}
-            {/* <Typography variant='body2' color='primary'> */}
-              {/* Email: <span className='font-medium'>admin@materialize.com</span> / Pass:{' '} */}
-              {/* <span className='font-medium'>admin</span> */}
-            {/* </Typography> */}
-          {/* </Alert> */}
-
           <form noValidate  action={() => {}}  autoComplete='off' onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-5' >
             <Controller name='email' control={control} rules={{ required: true }} render={({ field }) => (
                 <TextField {...field} fullWidth autoFocus type='email' label='Email' onChange={e => { field.onChange(e.target.value)
@@ -205,10 +191,6 @@ const Login = ({ mode }) => {
               </Typography>
             </div>
           </form>
-          {/* <Divider className='gap-3'>or</Divider>
-          <Button color='secondary' className='self-center text-textPrimary' startIcon={<img src='/images/logos/google.png' alt='Google' width={22} />} sx={{ '& .MuiButton-startIcon': { marginInlineEnd: 3 } }}  onClick={() => signIn('google')} >
-            Sign in with Google
-          </Button> */}
         </div>
       </div>
     </div>

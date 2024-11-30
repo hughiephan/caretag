@@ -81,7 +81,7 @@ const HorizontalMenu = ({ dictionary }) => {
           About
         </MenuItem>
 
-        <MenuItem href={`/${locale}/pages/team`} icon={<i className='ri-team-line' />}>
+        <MenuItem href={`/${locale}/pages/contact`} icon={<i className='ri-team-line' />}>
           Contact
         </MenuItem>
 

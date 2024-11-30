@@ -225,6 +225,13 @@ export const modifyUsersAllergyById = async (data) => {
   return pool.PUT(table,values,conditions);
 }
 
+export const deleteUsersAllergyById = async (data) => {
+  const table = `USERS_ALLERGY`;
+  const conditions = `user_id = '${data.user_id}' AND date_diagnosed = '${data.date_diagnosed}'`;
+
+  return pool.DELETE(table, conditions);
+}
+
 // USERS_ALLERGY
 `{
     user_id: 1,

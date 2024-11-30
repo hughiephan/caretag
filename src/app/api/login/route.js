@@ -19,7 +19,7 @@ export async function POST(req) {
     console.log('using token')
     console.log(token)
     
-    // switch any kind decode or decrypt method for token in future
+    // Extracting info in token string method should be same in generate token
     const plain_token = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
     
     users = await getUserDataByEmail(plain_token.email)

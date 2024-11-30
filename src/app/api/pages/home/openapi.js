@@ -6,6 +6,18 @@ const require = createRequire(import.meta.url)
 const axios = require('axios');
 
 function parseTextToHTML(input) {
+  let lines = input.split('\n');
+
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i] === '<table>') {
+      lines[i] = '<div style="overflow-x: auto;">' + lines[i];
+    } else if (lines[i] === '</table>') {
+      lines[i] = lines[i] + '</div>';
+    }
+  }
+
+  input = lines.join('');
+
   return input.replace(/\n/g, '').replace('```html', '').replace('```', ''); 
 }
 
