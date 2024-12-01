@@ -103,7 +103,7 @@ const VitalSign = ({ VitalSignResponseData }) => {
 
   const handleSave = async () => {
     candidate.user_id = session.user.id;
-    candidate.date_taken = formatDate(new Date(candidate.date_taken));
+    candidate.date_taken = candidate.date_taken === '' ? formatDate(new Date(attributes.date_taken)) : formatDate(new Date(candidate.date_taken));
     const response = await axios.put(`/api/pages/profile/vitalsign`, candidate);
 
     if (response.status != 200) {

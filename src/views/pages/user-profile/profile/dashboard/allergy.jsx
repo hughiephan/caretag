@@ -111,7 +111,7 @@ const AllergyTable = ({ allergies, userId }) => {
     }
 
     candidate.user_id = session.user.id;
-    candidate.date_diagnosed = formatDate(new Date(candidate.date_diagnosed));
+    candidate.date_diagnosed = candidate.date_diagnosed === '' ? formatDate(new Date(attributes.date_diagnosed)) : formatDate(new Date(candidate.date_diagnosed));
     delete candidate.allergy_name
     delete candidate.category_name;
     delete candidate.common_symptoms
